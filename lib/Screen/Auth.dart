@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:chat_app/Imagepicker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 final _firebase = FirebaseAuth.instance;
@@ -16,41 +21,75 @@ class _AuthScreen extends State<AuthScreen> {
   var _islogin = true;
   String? _enteredemail;
   String? _enteredpassword;
+  String? _enteredname;
+
+  var _isauthenticating = false;
+
+  File? _Selectediamge;
 
   void Submit() async {
     final _isvalid = _formkey.currentState!.validate();
     if (!_isvalid) {
       return;
-    }
+    } else if (_Selectediamge == null && !_islogin) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select an image'),
+        ),
+      );
+      return;
+    } else {
+      _formkey.currentState!.save();
 
-    _formkey.currentState!.save();
+      try {
+        setState(() {
+          _isauthenticating = true;
+        });
+        if (_islogin) {
+          final response = await _firebase.signInWithEmailAndPassword(
+              email: _enteredemail!, password: _enteredpassword!);
+        } else {
+          final response = await _firebase.createUserWithEmailAndPassword(
+              email: _enteredemail!, password: _enteredpassword!);
 
-    try {
-      if (_islogin) {
-        final loginrespons = await _firebase.signInWithEmailAndPassword(
-            email: _enteredemail!, password: _enteredpassword!);
-      } else {
-        final signupresponse = await _firebase.createUserWithEmailAndPassword(
-            email: _enteredemail!, password: _enteredpassword!);
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Account created'),
-          ),
-        );
-        print(signupresponse);
-      }
-    } on FirebaseAuthException catch (error) {
-      if (error.code == 'email-already-in-use') {
-        ///=======
-      } else {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message ?? 'Authentication failed')),
-        );
+          final storageref = FirebaseStorage.instance
+              .ref()
+              .child("Users_images")
+              .child(response.user!.uid);
+
+          await storageref.putFile(_Selectediamge!);
+          final imageurl = await storageref.getDownloadURL();
+
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(response.user!.uid)
+              .set({
+            'email': _enteredemail,
+            'name': _enteredname,
+            'image': imageurl,
+          });
+        }
+      } on FirebaseAuthException catch (error) {
+        setState(() {
+          _isauthenticating = false;
+        });
+        if (error.code == 'email-already-in-use') {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('email allready Used')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.message ?? 'Authentication failed')),
+          );
+        }
       }
     }
   }
+
+  ///submit================
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +110,55 @@ class _AuthScreen extends State<AuthScreen> {
               const SizedBox(
                 height: 30,
               ),
+              if (!_islogin)
+                PickImage(onpickimage: (image) {
+                  setState(() {
+                    _Selectediamge = image;
+                  });
+                }),
+              const SizedBox(
+                height: 20,
+              ),
               Form(
                 key: _formkey,
                 child: Column(
                   children: [
+                    if (!_islogin)
+                      Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: TextFormField(
+                          cursorColor: Colors.black,
+                          onSaved: (newValue) {
+                            setState(() {
+                              _enteredname = newValue!;
+                            });
+                          },
+                          autocorrect: false,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return '';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 228, 228, 228),
+                            prefixIcon: Icon(Icons.person, color: Colors.black),
+                            label: const Text(
+                              "Enter User name",
+                            ),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Container(
                       alignment: Alignment.center,
                       width: double.infinity,
@@ -146,24 +230,27 @@ class _AuthScreen extends State<AuthScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    FilledButton(
-                      onPressed: Submit,
-                      // ignore: sort_child_properties_last
-                      child: Text(_islogin ? "Log In" : "Sing Up"),
-                      style: FilledButton.styleFrom(
-                        fixedSize: const Size(double.maxFinite, 50),
+                    if (_isauthenticating) CircularProgressIndicator(),
+                    if (!_isauthenticating)
+                      FilledButton(
+                        onPressed: Submit,
+                        // ignore: sort_child_properties_last
+                        child: Text(_islogin ? "Log In" : "Sing Up"),
+                        style: FilledButton.styleFrom(
+                          fixedSize: const Size(double.maxFinite, 50),
+                        ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _islogin = !_islogin;
-                        });
-                      },
-                      child: Text(_islogin
-                          ? "create An new Acount"
-                          : "already have an account"),
-                    )
+                    if (!_isauthenticating)
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _islogin = !_islogin;
+                          });
+                        },
+                        child: Text(_islogin
+                            ? "create An new Acount"
+                            : "already have an account"),
+                      )
                   ],
                 ),
               )
