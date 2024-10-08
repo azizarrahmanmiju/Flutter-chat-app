@@ -1,3 +1,4 @@
+import 'package:chat_app/Screen/chat_scree.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,8 @@ class _UserlistState extends State<Userlist> {
   final currentUser = FirebaseAuth.instance.currentUser!;
   final TextEditingController searchController = TextEditingController();
 
-  void userlist() {
-    db.collection("Users").get().then(
+  void userlist() async {
+    await db.collection("Users").get().then(
       (querySnapshot) {
         print("Successfully completed");
 
@@ -134,23 +135,33 @@ class _UserlistState extends State<Userlist> {
           // Add the Search bar below AppBar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: TextField(
-              controller: searchController,
-              onChanged: (value) => filterSearchResults(value),
-              decoration: const InputDecoration(
-                labelText: "Search",
-                hintText: "Search by name",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    width: 1,
+                  )),
+              child: TextField(
+                controller: searchController,
+                onChanged: (value) => filterSearchResults(value),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Search by name",
+                  prefixIcon: Icon(Icons.search),
                 ),
               ),
             ),
           ),
+          const Text(
+            "Users",
+            textAlign: TextAlign.start,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(
-                top: 25,
+                top: 10,
                 left: 5,
                 right: 10,
               ),
@@ -167,55 +178,74 @@ class _UserlistState extends State<Userlist> {
                   : ListView.builder(
                       itemCount: filteredUserdata.length,
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 7,
-                            vertical: 3,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 2,
-                              ),
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatScree(
+                                          recipienguid: filteredUserdata[index]
+                                                  ['uid'] ??
+                                              "",
+                                          recipiename: filteredUserdata[index]
+                                                  ['name'] ??
+                                              "",
+                                          recipieimage: filteredUserdata[index]
+                                                  ['image'] ??
+                                              "",
+                                        )));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 7,
+                              vertical: 3,
                             ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 5,
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor: Colors.grey,
-                                    backgroundImage: NetworkImage(
-                                      filteredUserdata[index]['image'] ??
-                                          'https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1697898655.jpg',
+                            child: Container(
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 5,
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: NetworkImage(
+                                        filteredUserdata[index]['image'] ??
+                                            'https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1697898655.jpg',
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        filteredUserdata[index]['name'] ??
-                                            'No Name',
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          filteredUserdata[index]['name'] ??
+                                              'No Name',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      Text(filteredUserdata[index]['email'] ??
-                                          'No Email'),
-                                    ],
-                                  ),
-                                )
-                              ],
+                                        Text(filteredUserdata[index]['email'] ??
+                                            'No Email'),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );
