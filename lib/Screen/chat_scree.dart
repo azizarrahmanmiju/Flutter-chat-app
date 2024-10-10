@@ -1,114 +1,138 @@
-import 'package:chat_app/widget/no_massege.dart';
+import 'package:chat_app/widget/chating.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ChatScree extends StatefulWidget {
-  const ChatScree(
-      {required this.recipienguid,
-      required this.recipiename,
-      required this.recipieimage});
+var db = FirebaseFirestore.instance;
 
-  final String recipienguid;
-  final String recipiename;
-  final String recipieimage;
+class ChatScreen extends StatefulWidget {
+  final String recipientId;
+  final String recipientName;
+  final String recipientimage;
+
+  const ChatScreen({
+    Key? key,
+    required this.recipientId,
+    required this.recipientName,
+    required this.recipientimage,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _ChatScreen();
+    return _ChatScreenState();
   }
 }
 
-class _ChatScreen extends State<ChatScree> {
-  final _messagecontroller = TextEditingController();
-
-  @override
-  void dispose() {
-    _messagecontroller.dispose();
-    super.dispose();
-  }
-
+class _ChatScreenState extends State<ChatScreen> {
+  final _messageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 207, 207, 207),
         title: Row(
           children: [
-            CircleAvatar(
-                radius: 20,
-                backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-                backgroundImage: NetworkImage(widget.recipieimage)),
+            ClipRRect(
+              clipBehavior: Clip.hardEdge,
+              borderRadius: BorderRadius.circular(100),
+              child: Image.network(
+                widget.recipientimage,
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
+              ),
+            ),
             const SizedBox(
-              width: 20,
+              width: 10,
             ),
             Text(
-              widget.recipiename,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.06,
-                color: const Color.fromARGB(255, 56, 56, 56),
-              ),
+              "${widget.recipientName}",
+              style:
+                  TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
             )
           ],
         ),
       ),
-      body: Expanded(
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 20, right: 5, bottom: 10, top: 20),
-          child: Column(
-            children: [
-              Expanded(
-                child: NoMassege(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    height: 70,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 31, 31, 31),
-                          width: 2,
-                        )),
+      body: Column(
+        children: [
+          Expanded(
+            child: Chating(recipientid: widget.recipientId),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              bottom: 30,
+              top: 10,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(146, 95, 95, 95),
+                              blurRadius: 2,
+                              blurStyle: BlurStyle.normal,
+                              spreadRadius: 1,
+                              offset: Offset(0, 1))
+                        ],
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 236, 246, 250),
+                            Color.fromARGB(255, 252, 238, 236),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        bottom: 5,
+                        top: 5,
+                      ),
                       child: TextField(
-                          controller: _messagecontroller,
-                          textCapitalization: TextCapitalization.sentences,
-                          autocorrect: true,
-                          cursorWidth: 2,
-                          cursorColor: Colors.black,
-                          enableSuggestions: true,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                          )),
+                        autofocus: false,
+                        maxLines: null,
+                        keyboardType: TextInputType.text,
+                        controller: _messageController,
+                        decoration:
+                            const InputDecoration(border: InputBorder.none),
+                      ),
                     ),
                   ),
-                  Container(
-                      height: 70,
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(0, 255, 255, 255),
-                          borderRadius: BorderRadius.all(Radius.circular(50)),
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 31, 31, 31),
-                            width: 2,
-                          )),
-                      child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.send,
-                            color: Colors.black,
-                          )))
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                    onPressed: () {
+                      sendMessage(widget.recipientId, _messageController.text);
+                    },
+                    icon: const Icon(Icons.send))
+              ],
+            ),
           ),
-        ),
-      ), //appbar
+        ],
+      ),
     );
+  }
+
+  void sendMessage(String recid, String message) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    _messageController.clear();
+
+    if (currentUser != null && message.isNotEmpty) {
+      await db.collection('Messages').add({
+        'senderId': currentUser.uid,
+        'recipientId': recid,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(), // Add timestamp for ordering
+      }).then((value) {
+        print('Message sent successfully');
+      }).catchError((error) {
+        print('Failed to send message: $error');
+      });
+    }
   }
 }

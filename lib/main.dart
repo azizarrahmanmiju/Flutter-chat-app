@@ -23,17 +23,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 243, 33, 33),
+          brightness: Brightness.light,
+          seedColor: const Color.fromARGB(255, 4, 243, 252),
         ),
-        textTheme: GoogleFonts.poppinsTextTheme(),
+        textTheme: GoogleFonts.libreBaskervilleTextTheme(),
       ),
       home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (cntx, snapshot) {
             if (snapshot.hasData) {
-              return const Userlist();
+              return UserlistScreen();
             }
-            return AuthScreen();
+            return const AuthScreen();
           }),
     );
   }
