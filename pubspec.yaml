@@ -42,6 +42,7 @@ dependencies:
   cloud_firestore: ^5.4.4
   google_fonts: ^6.2.1
   lottie: ^3.1.2
+  file_picker: ^8.1.3
 
 dev_dependencies:
   flutter_test:
@@ -67,9 +68,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+     - lib/icons/
      - assets/images/logo2.png
      - assets/images/logo.png
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

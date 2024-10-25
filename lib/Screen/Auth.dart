@@ -167,6 +167,7 @@ class _AuthScreen extends State<AuthScreen> {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: TextFormField(
+                        keyboardType: TextInputType.text,
                         onSaved: (newValue) {
                           setState(() {
                             _enteredemail = newValue!;

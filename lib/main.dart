@@ -22,11 +22,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: const Color.fromARGB(255, 4, 243, 252),
         ),
-        textTheme: GoogleFonts.libreBaskervilleTextTheme(),
+        textTheme: GoogleFonts.robotoTextTheme(),
       ),
       home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),

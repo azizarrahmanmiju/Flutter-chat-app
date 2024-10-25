@@ -3,7 +3,16 @@ import 'package:flutter/material.dart';
 class Singlelist extends StatelessWidget {
   final String image;
   final String name;
-  const Singlelist({super.key, required this.image, required this.name});
+  final String lastmessage;
+  final String laststatus;
+
+  const Singlelist({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.lastmessage,
+    required this.laststatus,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +25,11 @@ class Singlelist extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Color.fromARGB(255, 240, 255, 247),
-              Color.fromARGB(255, 250, 245, 239),
-            ]),
+            color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(50)),
             boxShadow: [
               BoxShadow(
-                color: Color.fromARGB(183, 197, 196, 196),
+                color: Color.fromARGB(137, 231, 231, 231),
                 blurRadius: 5,
                 spreadRadius: 3,
                 offset: Offset(0, 5),
@@ -33,24 +39,55 @@ class Singlelist extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              ClipRRect(
-                clipBehavior: Clip.hardEdge,
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(
-                  image,
-                  height: 40,
-                  width: 40,
-                  fit: BoxFit.cover,
+              CircleAvatar(
+                backgroundImage: image != null
+                    ? NetworkImage(image)
+                    : const AssetImage(
+                        'lib/icons/profile.jpg'), // example for the user image
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name, // Username or title
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Text(
+                          lastmessage,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(width: 5),
+                        laststatus == 'seen'
+                            ? SizedBox(
+                                height: 14,
+                                width: 14,
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(image),
+                                ),
+                              )
+                            : Image.asset(
+                                height: 14,
+                                width: 14,
+                                laststatus == 'sent'
+                                    ? 'lib/icons/sent.png'
+                                    : 'lib/icons/tick.png'),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                "${name}",
-                style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.04),
-              )
+              // Any other widgets like timestamps or message status
             ],
           ),
         ),

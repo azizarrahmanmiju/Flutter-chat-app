@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:chat_app/service/fileupload.dart';
+import 'package:chat_app/service/sendmessage.dart';
 import 'package:chat_app/widget/chating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 var db = FirebaseFirestore.instance;
 
@@ -11,11 +16,11 @@ class ChatScreen extends StatefulWidget {
   final String recipientimage;
 
   const ChatScreen({
-    Key? key,
+    super.key,
     required this.recipientId,
     required this.recipientName,
     required this.recipientimage,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -28,24 +33,27 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 247, 247, 247),
       appBar: AppBar(
         title: Row(
           children: [
             ClipRRect(
               clipBehavior: Clip.hardEdge,
               borderRadius: BorderRadius.circular(100),
-              child: Image.network(
-                widget.recipientimage,
-                height: 40,
-                width: 40,
-                fit: BoxFit.cover,
-              ),
+              child: widget.recipientimage != null
+                  ? Image.network(
+                      widget.recipientimage,
+                      height: 40,
+                      width: 40,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset("lib/icons/profile.jpg"),
             ),
             const SizedBox(
               width: 10,
             ),
             Text(
-              "${widget.recipientName}",
+              widget.recipientName,
               style:
                   TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
             )
@@ -55,7 +63,10 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Chating(recipientid: widget.recipientId),
+            child: Chating(
+              recipientid: widget.recipientId,
+              imageurl: widget.recipientimage,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -106,7 +117,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 IconButton(
                     onPressed: () {
-                      sendMessage(widget.recipientId, _messageController.text);
+                      if (_messageController.text.isNotEmpty) {
+                        sendMessage(
+                          widget.recipientId,
+                          message: _messageController.text,
+                        );
+                        _messageController.clear();
+                      }
                     },
                     icon: const Icon(Icons.send))
               ],
@@ -115,24 +132,27 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
+  } //======
+
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File image = File(pickedFile.path);
+      // String imageUrl = await uploadFile(image,'jpg');
+      // sendMessage(widget.recipientId, fileUrl: imageUrl, fileType: 'image');
+    }
   }
 
-  void sendMessage(String recid, String message) async {
-    final currentUser = FirebaseAuth.instance.currentUser;
+  Future<void> pickZipFile() async {
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['zip']);
 
-    _messageController.clear();
-
-    if (currentUser != null && message.isNotEmpty) {
-      await db.collection('Messages').add({
-        'senderId': currentUser.uid,
-        'recipientId': recid,
-        'message': message,
-        'timestamp': FieldValue.serverTimestamp(), // Add timestamp for ordering
-      }).then((value) {
-        print('Message sent successfully');
-      }).catchError((error) {
-        print('Failed to send message: $error');
-      });
+    if (result != null) {
+      File zipFile = File(result.files.single.path!);
+      //   String zipUrl = await uploadFile(zipFile, 'zip');
+      //   sendMessage(widget.recipientId, fileUrl: zipUrl, fileType: 'zip');
     }
   }
 }
