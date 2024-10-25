@@ -18,6 +18,19 @@ class Chating extends StatefulWidget {
 }
 
 class _ChatingState extends State<Chating> {
+  @override
+  void initState() {
+    super.initState();
+    // Listen for the first message and set it as the selected message ID
+    GetMessage.getMessages(widget.recipientid).first.then((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        setState(() {
+          selectedmessageid = snapshot.docs.first.id;
+        });
+      }
+    });
+  }
+
   String? selectedmessageid;
   @override
   Widget build(BuildContext context) {
@@ -50,15 +63,20 @@ class _ChatingState extends State<Chating> {
                       ? (message['timestamp'] as Timestamp).toDate()
                       : null;
                   // check if message is from me
-                  return ListTile(
-                    title: Align(
-                      alignment:
-                          isMe ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: isMe ? 150 : 0,
-                          right: isMe ? 0 : 150,
-                        ),
+
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      left: isMe
+                          ? MediaQuery.of(context).size.width * 0.3
+                          : MediaQuery.of(context).size.width * 0.03,
+                      right: isMe
+                          ? MediaQuery.of(context).size.width * 0.03
+                          : MediaQuery.of(context).size.width * 0.3,
+                    ),
+                    child: Container(
+                      child: Align(
+                        alignment:
+                            isMe ? Alignment.centerRight : Alignment.centerLeft,
                         child: Column(
                           crossAxisAlignment: isMe
                               ? CrossAxisAlignment.end
@@ -98,10 +116,12 @@ class _ChatingState extends State<Chating> {
                                 child: Text(
                                   message['message'],
                                   style: TextStyle(
-                                      color: isMe
-                                          ? Colors.black
-                                          : const Color.fromARGB(
-                                              255, 255, 255, 255)),
+                                    fontSize: 15,
+                                    color: isMe
+                                        ? Colors.black
+                                        : const Color.fromARGB(
+                                            255, 255, 255, 255),
+                                  ),
                                 ),
                               ),
                             ),
@@ -109,39 +129,45 @@ class _ChatingState extends State<Chating> {
                               height: 4,
                             ),
                             selectedmessageid == message.id
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: isMe
-                                        ? MainAxisAlignment.end
-                                        : MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        timestamp != null
-                                            ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
-                                            : '',
-                                        style: const TextStyle(
-                                            fontSize: 10, color: Colors.black),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      isMe
-                                          ? message['status'] == 'seen'
-                                              ? SizedBox(
-                                                  height: 14,
-                                                  width: 14,
-                                                  child: CircleAvatar(
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                            widget.imageurl),
-                                                  ),
-                                                )
-                                              : Image.asset(
-                                                  height: 14,
-                                                  width: 14,
-                                                  message['status'] == 'sent'
-                                                      ? 'lib/icons/sent.png'
-                                                      : 'lib/icons/tick.png')
-                                          : const Text("")
-                                    ],
+                                ? Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: isMe
+                                          ? MainAxisAlignment.end
+                                          : MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          timestamp != null
+                                              ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
+                                              : '',
+                                          style: const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        isMe
+                                            ? message['status'] == 'seen'
+                                                ? SizedBox(
+                                                    height: 14,
+                                                    width: 14,
+                                                    child: CircleAvatar(
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              widget.imageurl),
+                                                    ),
+                                                  )
+                                                : Image.asset(
+                                                    height: 14,
+                                                    width: 14,
+                                                    message['status'] == 'sent'
+                                                        ? 'lib/icons/sent.png'
+                                                        : 'lib/icons/tick.png')
+                                            : const SizedBox(
+                                                height: 0,
+                                              ),
+                                      ],
+                                    ),
                                   )
                                 : const SizedBox(
                                     height: 0,

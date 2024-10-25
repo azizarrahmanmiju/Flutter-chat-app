@@ -60,28 +60,30 @@ class Singlelist extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Text(
-                          lastmessage,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          style: const TextStyle(fontSize: 14),
+                        Expanded(
+                          child: Text(
+                            lastmessage,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                         const SizedBox(width: 5),
-                        laststatus == 'seen'
-                            ? SizedBox(
-                                height: 14,
-                                width: 14,
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(image),
-                                ),
-                              )
-                            : Image.asset(
-                                height: 14,
-                                width: 14,
-                                laststatus == 'sent'
-                                    ? 'lib/icons/sent.png'
-                                    : 'lib/icons/tick.png'),
+                        // laststatus == 'seen'
+                        //     ? SizedBox(
+                        //         height: 14,
+                        //         width: 14,
+                        //         child: CircleAvatar(
+                        //           backgroundImage: NetworkImage(image),
+                        //         ),
+                        //       )
+                        //     :  Image.asset(
+                        //         height: 14,
+                        //         width: 14,
+                        //         laststatus == 'sent'
+                        //             ? 'lib/icons/sent.png'
+                        //             : 'lib/icons/tick.png'),
                       ],
                     ),
                   ],

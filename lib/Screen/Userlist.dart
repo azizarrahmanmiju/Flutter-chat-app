@@ -81,7 +81,7 @@ class _Userlist extends State<UserlistScreen> {
                     );
                   }
 
-                  String lastMessage = "No messages yet";
+                  String lastMessage = '';
                   String status = 'sent';
 
                   if (messageSnapshot.hasData &&
