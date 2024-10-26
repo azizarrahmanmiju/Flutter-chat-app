@@ -7,7 +7,7 @@ enum AppTheme {
 }
 
 class ThemeNotifier extends StateNotifier<AppTheme> {
-  ThemeNotifier() : super(AppTheme.dark);
+  ThemeNotifier() : super(AppTheme.light);
 
   void toggleTheme() {
     if (state == AppTheme.light) {
