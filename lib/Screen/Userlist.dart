@@ -21,24 +21,36 @@ class _Userlist extends State<UserlistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Icon(Icons.abc),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        title: const Row(
+        title: Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               backgroundImage: AssetImage(
                 "lib/icons/profile.jpg",
               ), // example for the user image
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
-            Text(
-              'Azizar Rahman',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Azizar rahman',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+                Text(
+                  "Wellcome back to Talkflow",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 12),
+                )
+              ],
             ),
           ],
         ),

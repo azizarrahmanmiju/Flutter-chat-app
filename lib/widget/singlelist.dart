@@ -24,15 +24,15 @@ class Singlelist extends StatelessWidget {
       ),
       child: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(50)),
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
             boxShadow: [
               BoxShadow(
-                color: Color.fromARGB(137, 231, 231, 231),
-                blurRadius: 5,
-                spreadRadius: 3,
-                offset: Offset(0, 5),
+                color: Theme.of(context).colorScheme.onSurface,
+                blurRadius: 2,
+                spreadRadius: 0,
+                offset: const Offset(0, 0),
               )
             ]),
         child: Padding(
@@ -40,6 +40,7 @@ class Singlelist extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
+                // ignore: unnecessary_null_comparison
                 backgroundImage: image != null
                     ? NetworkImage(image)
                     : const AssetImage(
@@ -57,7 +58,7 @@ class Singlelist extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    // const SizedBox(height: 0),
                     Row(
                       children: [
                         Expanded(

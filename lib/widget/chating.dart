@@ -1,9 +1,11 @@
+import 'package:chat_app/riverpod/smessageid.dart';
 import 'package:chat_app/service/getmessage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Chating extends StatefulWidget {
+class Chating extends ConsumerStatefulWidget {
   const Chating({
     super.key,
     required this.recipientid,
@@ -14,26 +16,15 @@ class Chating extends StatefulWidget {
   final String imageurl;
 
   @override
-  State<Chating> createState() => _ChatingState();
+  ConsumerState<Chating> createState() => _ChatingState();
 }
 
-class _ChatingState extends State<Chating> {
-  @override
-  void initState() {
-    super.initState();
-    // Listen for the first message and set it as the selected message ID
-    GetMessage.getMessages(widget.recipientid).first.then((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        setState(() {
-          selectedmessageid = snapshot.docs.first.id;
-        });
-      }
-    });
-  }
-
-  String? selectedmessageid;
+class _ChatingState extends ConsumerState<Chating> {
   @override
   Widget build(BuildContext context) {
+    final messageidnoti = ref.read(messageidnotifierprovider.notifier);
+    final messageidnotiget = ref.read(messageidnotifierprovider);
+
     return Column(children: <Widget>[
       Expanded(
         child: StreamBuilder(
@@ -43,7 +34,7 @@ class _ChatingState extends State<Chating> {
               return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             if (!snapshot.hasData) {
               return const Center(child: Text('No messages'));
@@ -85,12 +76,9 @@ class _ChatingState extends State<Chating> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  selectedmessageid =
-                                      message.id == selectedmessageid
-                                          ? null
-                                          : message.id;
+                                  messageidnoti.ontoggle(message.id);
+                                  print(message.id);
                                 });
-                                print(selectedmessageid);
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -100,8 +88,9 @@ class _ChatingState extends State<Chating> {
                                 decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
-                                        color: const Color.fromARGB(
-                                                255, 139, 139, 139)
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background
                                             .withOpacity(0.2),
                                         blurRadius: 5,
                                         offset: const Offset(2, 2),
@@ -110,68 +99,81 @@ class _ChatingState extends State<Chating> {
                                     borderRadius: BorderRadius.circular(12),
                                     color: isMe
                                         ? const Color.fromARGB(
-                                            255, 255, 255, 255)
+                                            255, 211, 211, 211)
                                         : const Color.fromARGB(
                                             255, 48, 47, 47)),
-                                child: Text(
-                                  message['message'],
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: isMe
-                                        ? Colors.black
-                                        : const Color.fromARGB(
-                                            255, 255, 255, 255),
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment: isMe
+                                      ? CrossAxisAlignment.end
+                                      : CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      message['message'],
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: isMe
+                                            ? Colors.black
+                                            : const Color.fromARGB(
+                                                255, 255, 255, 255),
+                                      ),
+                                    ),
+                                    messageidnotiget == message.id
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: isMe
+                                                  ? MainAxisAlignment.end
+                                                  : MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  timestamp != null
+                                                      ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
+                                                      : '',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: isMe
+                                                          ? Colors.black
+                                                          : Colors.white),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                isMe
+                                                    ? message['status'] ==
+                                                            'seen'
+                                                        ? SizedBox(
+                                                            height: 14,
+                                                            width: 14,
+                                                            child: CircleAvatar(
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      widget
+                                                                          .imageurl),
+                                                            ),
+                                                          )
+                                                        : Image.asset(
+                                                            height: 14,
+                                                            width: 14,
+                                                            message['status'] ==
+                                                                    'sent'
+                                                                ? 'lib/icons/tick.png'
+                                                                : 'lib/icons/tick.png')
+                                                    : const SizedBox(
+                                                        height: 0,
+                                                      ),
+                                              ],
+                                            ),
+                                          )
+                                        : const SizedBox(
+                                            height: 0,
+                                          ),
+                                  ],
                                 ),
                               ),
                             ),
                             const SizedBox(
                               height: 4,
                             ),
-                            selectedmessageid == message.id
-                                ? Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: isMe
-                                          ? MainAxisAlignment.end
-                                          : MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          timestamp != null
-                                              ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
-                                              : '',
-                                          style: const TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        isMe
-                                            ? message['status'] == 'seen'
-                                                ? SizedBox(
-                                                    height: 14,
-                                                    width: 14,
-                                                    child: CircleAvatar(
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                              widget.imageurl),
-                                                    ),
-                                                  )
-                                                : Image.asset(
-                                                    height: 14,
-                                                    width: 14,
-                                                    message['status'] == 'sent'
-                                                        ? 'lib/icons/sent.png'
-                                                        : 'lib/icons/tick.png')
-                                            : const SizedBox(
-                                                height: 0,
-                                              ),
-                                      ],
-                                    ),
-                                  )
-                                : const SizedBox(
-                                    height: 0,
-                                  ),
                           ],
                         ),
                       ),

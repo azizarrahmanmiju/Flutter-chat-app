@@ -33,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 247, 247, 247),
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Row(
           children: [
@@ -69,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
               left: 20,
               bottom: 30,
               top: 10,
@@ -79,21 +79,16 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: Container(
                     clipBehavior: Clip.hardEdge,
-                    decoration: const BoxDecoration(
-                        boxShadow: [
+                    decoration: BoxDecoration(
+                        boxShadow: const [
                           BoxShadow(
-                              color: Color.fromARGB(146, 95, 95, 95),
-                              blurRadius: 2,
-                              blurStyle: BlurStyle.normal,
-                              spreadRadius: 1,
+                              color: const Color.fromARGB(151, 182, 182, 182),
+                              blurRadius: 5,
+                              blurStyle: BlurStyle.inner,
+                              spreadRadius: 2,
                               offset: Offset(0, 1))
                         ],
-                        gradient: LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 236, 246, 250),
-                            Color.fromARGB(255, 252, 238, 236),
-                          ],
-                        ),
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     child: Padding(
                       padding: const EdgeInsets.only(
