@@ -1,4 +1,7 @@
+import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
+import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/riverpod/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_app/Screen/Userlist.dart';
@@ -9,7 +12,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'widget/firebase_options.dart';
+import 'firebaseservice/firebase_options.dart';
+
+final db = FirebaseFirestore.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +30,7 @@ class MyApp extends ConsumerWidget {
     final theme = ref.watch(themeNotifierProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: theme == AppTheme.dark ? darkTheme : lightTheme,
+      theme: theme == false ? darkTheme : lightTheme,
       home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (cntx, snapshot) {

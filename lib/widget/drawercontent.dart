@@ -1,19 +1,26 @@
 import 'package:chat_app/model/Userdata.dart';
-import 'package:chat_app/service/getcurrentuserdata.dart';
+import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Drawercontent extends StatefulWidget {
+class Drawercontent extends ConsumerStatefulWidget {
   const Drawercontent({
     super.key,
   });
 
   @override
-  State<Drawercontent> createState() => _DrawercontentState();
+  ConsumerState<Drawercontent> createState() => _DrawercontentState();
 }
 
-class _DrawercontentState extends State<Drawercontent> {
-  bool lightmode = false;
+class _DrawercontentState extends ConsumerState<Drawercontent> {
+  bool islightmode = true;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -24,37 +31,10 @@ class _DrawercontentState extends State<Drawercontent> {
             return const CircularProgressIndicator();
           }
           Userdata currentuserdata = snapshot.data as Userdata;
-
           return ListView(
             children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, top: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage: NetworkImage(currentuserdata.image!),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        currentuserdata.name!,
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface),
-                      ),
-                      Text(
-                        currentuserdata.email!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
+              Container(),
+              const SizedBox(
                 height: 35,
               ),
               Expanded(
@@ -68,17 +48,18 @@ class _DrawercontentState extends State<Drawercontent> {
               ),
               const SizedBox(height: 10),
               ListTile(
-                leading: const Text(
+                title: const Text(
                   "Light mode",
                   style: TextStyle(
                     fontSize: 16,
                   ),
                 ),
+                subtitle: Text(currentuserdata.theme!),
                 trailing: CupertinoSwitch(
-                    value: lightmode,
+                    value: islightmode,
                     onChanged: (value) {
                       setState(() {
-                        lightmode = value;
+                        islightmode = value;
                       });
                     }),
               )

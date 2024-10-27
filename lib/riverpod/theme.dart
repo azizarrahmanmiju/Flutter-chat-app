@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'dart:ffi';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum AppTheme {
@@ -6,19 +7,14 @@ enum AppTheme {
   dark,
 }
 
-class ThemeNotifier extends StateNotifier<AppTheme> {
-  ThemeNotifier() : super(AppTheme.dark);
+class ThemeNotifier extends StateNotifier<bool> {
+  ThemeNotifier() : super(false);
 
-  void toggleTheme() {
-    if (state == AppTheme.light) {
-      state = AppTheme.dark;
-    } else {
-      state = AppTheme.light;
-    }
+  void toggleTheme(bool istrue) {
+    state = istrue;
   }
 }
 
-final themeNotifierProvider =
-    StateNotifierProvider<ThemeNotifier, AppTheme>((ref) {
+final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {
   return ThemeNotifier();
 });

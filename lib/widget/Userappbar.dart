@@ -38,6 +38,5 @@ class userappbar extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }

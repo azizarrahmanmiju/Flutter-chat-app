@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:chat_app/Screen/chat_scree.dart';
 import 'package:chat_app/model/Userdata.dart';
-import 'package:chat_app/service/getcurrentuserdata.dart';
-import 'package:chat_app/service/getdata.dart';
-import 'package:chat_app/service/getmessage.dart';
+import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
+import 'package:chat_app/firebaseservice/getdata.dart';
+import 'package:chat_app/firebaseservice/getmessage.dart';
 import 'package:chat_app/widget/Userappbar.dart';
 import 'package:chat_app/widget/drawercontent.dart';
 import 'package:chat_app/widget/singlelist.dart';
@@ -23,11 +23,11 @@ class UserlistScreen extends StatefulWidget {
 
 class _Userlist extends State<UserlistScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
-  final bool _isme = false;
 
   @override
   Widget build(BuildContext context) {
-    Userdata currentUserData;
+    Userdata currentuserdat;
+
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
@@ -38,24 +38,31 @@ class _Userlist extends State<UserlistScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Text('...');
             }
-            currentUserData = snapshot.data!;
+            currentuserdat = snapshot.data!;
             return GestureDetector(
               onTap: () => _scaffoldkey.currentState!.openDrawer(),
               child: userappbar(
-                  name: currentUserData.name!, image: currentUserData.image!),
+                  name: currentuserdat.name!, image: currentuserdat.image!),
             );
           },
         ),
       ),
-      drawer: Drawercontent(),
+      drawer: const Drawercontent(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 25, bottom: 5, left: 25),
-            child: Text(
-              "recent",
-              textAlign: TextAlign.start,
+          Container(
+            padding: EdgeInsets.only(left: 20),
+            child: const Column(
+              children: [
+                Text('Welcome to'),
+                Text(
+                  "Talkflow",
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
+                )
+              ],
             ),
           ),
           Expanded(
@@ -103,8 +110,8 @@ class _Userlist extends State<UserlistScreen> {
                             messageSnapshot.data!.docs.isNotEmpty) {
                           lastMessage = messageSnapshot.data!.docs
                               .first['message']; // Adjust based on your field
-                          status = messageSnapshot.data!.docs.first['status'] ??
-                              ""; // Adjust based on your field
+                          status = messageSnapshot.data!.docs
+                              .first['status']; // Adjust based on your field
                         }
 
                         return InkWell(
