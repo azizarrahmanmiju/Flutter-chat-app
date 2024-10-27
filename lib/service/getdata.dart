@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 final db = FirebaseFirestore.instance;
 final authdb = FirebaseAuth.instance;
-List<Userdata> currentuserdatalist = [];
 
 class GetDataService {
   static List<Userdata> userslist = [];
@@ -20,8 +19,6 @@ class GetDataService {
           userslist.add(
             Userdata.fromfirestore(doc.data(), doc.id),
           );
-        } else {
-          currentuserdatalist.add(Userdata.fromfirestore(doc.data(), doc.id));
         }
       }
       return userslist;
