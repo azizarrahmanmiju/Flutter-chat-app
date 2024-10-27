@@ -28,11 +28,19 @@ class userappbar extends StatelessWidget {
           children: [
             Text(
               name,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
             ),
             Text(
               "welcome back to talkflow",
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.6),
+                  ),
             )
           ],
         ),

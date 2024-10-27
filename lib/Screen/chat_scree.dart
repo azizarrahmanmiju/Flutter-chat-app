@@ -1,12 +1,9 @@
 import 'dart:io';
 
-import 'package:chat_app/firebaseservice/fileupload.dart';
 import 'package:chat_app/firebaseservice/sendmessage.dart';
 import 'package:chat_app/widget/chating.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 var db = FirebaseFirestore.instance;
 
@@ -69,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 20,
               bottom: 30,
               top: 10,
@@ -80,16 +77,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Container(
                     clipBehavior: Clip.hardEdge,
                     decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                              color: const Color.fromARGB(151, 182, 182, 182),
-                              blurRadius: 5,
-                              blurStyle: BlurStyle.inner,
-                              spreadRadius: 2,
-                              offset: Offset(0, 1))
-                        ],
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: const Color.fromARGB(151, 182, 182, 182),
+                            blurRadius: 50,
+                            blurStyle: BlurStyle.inner,
+                            spreadRadius: 2,
+                            offset: Offset(0, 1))
+                      ],
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                         left: 20,
@@ -99,10 +99,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: TextField(
                         autofocus: false,
                         maxLines: null,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground),
                         keyboardType: TextInputType.text,
                         controller: _messageController,
-                        decoration:
-                            const InputDecoration(border: InputBorder.none),
+                        textDirection: TextDirection.ltr,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
@@ -129,25 +133,25 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   } //======
 
-  Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  // Future<void> pickImage() async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      File image = File(pickedFile.path);
-      // String imageUrl = await uploadFile(image,'jpg');
-      // sendMessage(widget.recipientId, fileUrl: imageUrl, fileType: 'image');
-    }
-  }
+  //   if (pickedFile != null) {
+  //     File image = File(pickedFile.path);
+  //     // String imageUrl = await uploadFile(image,'jpg');
+  //     // sendMessage(widget.recipientId, fileUrl: imageUrl, fileType: 'image');
+  //   }
+  // }
 
-  Future<void> pickZipFile() async {
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.custom, allowedExtensions: ['zip']);
+  // Future<void> pickZipFile() async {
+  //   final result = await FilePicker.platform
+  //       .pickFiles(type: FileType.custom, allowedExtensions: ['zip']);
 
-    if (result != null) {
-      File zipFile = File(result.files.single.path!);
-      //   String zipUrl = await uploadFile(zipFile, 'zip');
-      //   sendMessage(widget.recipientId, fileUrl: zipUrl, fileType: 'zip');
-    }
-  }
+  //   if (result != null) {
+  //     File zipFile = File(result.files.single.path!);
+  //     //   String zipUrl = await uploadFile(zipFile, 'zip');
+  //     //   sendMessage(widget.recipientId, fileUrl: zipUrl, fileType: 'zip');
+  //   }
+  // }
 }

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:chat_app/Screen/chat_scree.dart';
 import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
@@ -27,7 +25,6 @@ class _Userlist extends State<UserlistScreen> {
   @override
   Widget build(BuildContext context) {
     Userdata currentuserdat;
-
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
@@ -52,16 +49,33 @@ class _Userlist extends State<UserlistScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 20),
-            child: const Column(
+            padding: EdgeInsets.only(left: 20, top: 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Welcome to'),
+                Text(
+                  'Welcome to',
+                  style: TextStyle(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.8),
+                  ),
+                ),
                 Text(
                   "Talkflow",
                   style: TextStyle(
-                    fontSize: 30,
-                  ),
-                )
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onBackground),
+                ),
+                const SizedBox(height: 25),
+                Text(
+                  "recent  conversations",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).colorScheme.onBackground),
+                ),
               ],
             ),
           ),

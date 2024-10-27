@@ -56,10 +56,10 @@ class Singlelist extends StatelessWidget {
                   children: [
                     Text(
                       name, // Username or title
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.onBackground),
                     ),
                     // const SizedBox(height: 0),
                     Row(
@@ -70,7 +70,12 @@ class Singlelist extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(0.6)),
                           ),
                         ),
                         const SizedBox(width: 5),

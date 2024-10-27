@@ -1,5 +1,6 @@
 import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
+import 'package:chat_app/riverpod/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,21 +15,24 @@ class Drawercontent extends ConsumerStatefulWidget {
 }
 
 class _DrawercontentState extends ConsumerState<Drawercontent> {
-  bool islightmode = true;
-
   // @override
   // void initState() {
   //   super.initState();
-  // }
+  //}
 
   @override
   Widget build(BuildContext context) {
+    final themetogleresponse = ref.read(themeNotifierProvider.notifier);
+    bool islightmode = ref.watch(themeNotifierProvider);
+
     return Drawer(
       child: StreamBuilder(
         stream: fetchcurrentuserdata(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
           Userdata currentuserdata = snapshot.data as Userdata;
           return ListView(
@@ -54,12 +58,11 @@ class _DrawercontentState extends ConsumerState<Drawercontent> {
                     fontSize: 16,
                   ),
                 ),
-                subtitle: Text(currentuserdata.theme!),
                 trailing: CupertinoSwitch(
                     value: islightmode,
                     onChanged: (value) {
                       setState(() {
-                        islightmode = value;
+                        themetogleresponse.toggleTheme(value);
                       });
                     }),
               )
