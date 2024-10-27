@@ -1,12 +1,19 @@
 import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/service/getcurrentuserdata.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Drawercontent extends StatelessWidget {
+class Drawercontent extends StatefulWidget {
   const Drawercontent({
     super.key,
   });
 
+  @override
+  State<Drawercontent> createState() => _DrawercontentState();
+}
+
+class _DrawercontentState extends State<Drawercontent> {
+  bool lightmode = false;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -47,7 +54,34 @@ class Drawercontent extends StatelessWidget {
                   ),
                 ),
               ),
-              ListTile()
+              SizedBox(
+                height: 35,
+              ),
+              Expanded(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(currentuserdata.image!),
+                  ),
+                  title: const Text("Profile"),
+                  subtitle: Text(currentuserdata.name!),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ListTile(
+                leading: const Text(
+                  "Light mode",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                trailing: CupertinoSwitch(
+                    value: lightmode,
+                    onChanged: (value) {
+                      setState(() {
+                        lightmode = value;
+                      });
+                    }),
+              )
             ],
           );
         },
