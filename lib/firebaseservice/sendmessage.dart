@@ -13,7 +13,7 @@ void sendMessage(String recid,
     'message': message ?? '',
     'timestamp': FieldValue.serverTimestamp(),
     'status': 'sent',
-    'image': fileUrl,
+    'image': fileUrl ?? '',
     'fileType': fileType ?? '',
   };
 

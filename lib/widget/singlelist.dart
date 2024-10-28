@@ -66,7 +66,8 @@ class Singlelist extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            lastmessage,
+                            lastmessage ?? "No  messages", // Last message
+
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,

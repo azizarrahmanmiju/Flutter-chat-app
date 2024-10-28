@@ -35,26 +35,29 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Row(
-          children: [
-            ClipRRect(
-                clipBehavior: Clip.hardEdge,
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(
-                  widget.recipientimage,
-                  height: 40,
-                  width: 40,
-                  fit: BoxFit.cover,
-                )),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              widget.recipientName,
-              style:
-                  TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
-            )
-          ],
+        title: Hero(
+          tag: "hello",
+          child: Row(
+            children: [
+              ClipRRect(
+                  clipBehavior: Clip.hardEdge,
+                  borderRadius: BorderRadius.circular(100),
+                  child: Image.network(
+                    widget.recipientimage,
+                    height: 40,
+                    width: 40,
+                    fit: BoxFit.cover,
+                  )),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                widget.recipientName,
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.04),
+              )
+            ],
+          ),
         ),
       ),
       body: Column(

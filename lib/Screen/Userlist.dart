@@ -35,13 +35,7 @@ class _Userlist extends State<UserlistScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Text('...');
             }
-            currentuserdat = snapshot.data ??
-                const Userdata(
-                    id: '',
-                    name: 'No account',
-                    email: 'no email',
-                    image: '',
-                    theme: 'light');
+            currentuserdat = snapshot.data!;
 
             return GestureDetector(
               onTap: () => _scaffoldkey.currentState!.openDrawer(),
@@ -56,7 +50,7 @@ class _Userlist extends State<UserlistScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 20, top: 40),
+            padding: const EdgeInsets.only(left: 20, top: 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
