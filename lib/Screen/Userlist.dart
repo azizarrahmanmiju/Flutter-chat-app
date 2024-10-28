@@ -35,7 +35,14 @@ class _Userlist extends State<UserlistScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Text('...');
             }
-            currentuserdat = snapshot.data!;
+            currentuserdat = snapshot.data ??
+                const Userdata(
+                    id: '',
+                    name: 'No account',
+                    email: 'no email',
+                    image: '',
+                    theme: 'light');
+
             return GestureDetector(
               onTap: () => _scaffoldkey.currentState!.openDrawer(),
               child: userappbar(

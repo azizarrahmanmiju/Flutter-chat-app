@@ -34,10 +34,14 @@ class _ChatingState extends ConsumerState<Chating> {
               return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
             if (!snapshot.hasData) {
-              return const Center(child: Text('No messages'));
+              return const Center(
+                child: Text('No messages'),
+              );
             }
             var messages = snapshot.data!.docs;
 

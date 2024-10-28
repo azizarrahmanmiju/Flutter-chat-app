@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/widget/Imagepicker.dart';
+import 'package:chat_app/widget/drawercontent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,6 +18,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreen extends State<AuthScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _formkey = GlobalKey<FormState>();
   var _islogin = true;
   String? _enteredemail;
@@ -93,7 +95,18 @@ class _AuthScreen extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _colorpallet = Theme.of(context).colorScheme;
+
     return Scaffold(
+      key: _scaffoldkey,
+      drawer: Drawercontent(),
+      appBar: AppBar(
+        leading: InkWell(
+            onTap: () {
+              _scaffoldkey.currentState!.openDrawer();
+            },
+            child: Icon(Icons.menu)),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 40,
@@ -104,9 +117,11 @@ class _AuthScreen extends State<AuthScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/images/logo.png',
-              ),
+              if (_islogin)
+                Image.asset(
+                  'assets/images/logo.png',
+                  height: 60,
+                ),
               const SizedBox(
                 height: 30,
               ),
@@ -128,11 +143,23 @@ class _AuthScreen extends State<AuthScreen> {
                         alignment: Alignment.center,
                         width: double.infinity,
                         decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
                           borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 2, // soften the shadow
+                              spreadRadius: 0.2, //extend the shadow
+                              color: Colors.grey,
+                              blurStyle: BlurStyle.normal,
+                            )
+                          ],
                         ),
                         clipBehavior: Clip.hardEdge,
                         child: TextFormField(
-                          cursorColor: Colors.black,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                          cursorColor: _colorpallet.onBackground,
                           onSaved: (newValue) {
                             setState(() {
                               _enteredname = newValue!;
@@ -145,11 +172,10 @@ class _AuthScreen extends State<AuthScreen> {
                             }
                             return null;
                           },
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            filled: true,
-                            fillColor: Color.fromARGB(255, 228, 228, 228),
-                            prefixIcon: Icon(Icons.person, color: Colors.black),
+                            prefixIcon: Icon(Icons.person,
+                                color: _colorpallet.onBackground),
                             label: const Text(
                               "Enter User name",
                             ),
@@ -163,10 +189,21 @@ class _AuthScreen extends State<AuthScreen> {
                       alignment: Alignment.center,
                       width: double.infinity,
                       decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 2, // soften the shadow
+                            spreadRadius: 0.2, //extend the shadow
+                            color: Colors.grey,
+                            blurStyle: BlurStyle.normal,
+                          )
+                        ],
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: TextFormField(
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground),
                         keyboardType: TextInputType.text,
                         onSaved: (newValue) {
                           setState(() {
@@ -184,11 +221,9 @@ class _AuthScreen extends State<AuthScreen> {
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          filled: true,
-                          fillColor: Color.fromARGB(255, 228, 228, 228),
                           prefixIcon: Icon(Icons.person,
                               color: Theme.of(context).colorScheme.primary),
-                          label: Text("Enter Email Address"),
+                          label: const Text("Enter Email Address"),
                         ),
                       ),
                     ),
@@ -198,10 +233,20 @@ class _AuthScreen extends State<AuthScreen> {
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 2, // soften the shadow
+                            spreadRadius: 0.2, //extend the shadow
+                            color: Colors.grey,
+                            blurStyle: BlurStyle.normal,
+                          )
+                        ],
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: TextFormField(
+                        style: TextStyle(color: _colorpallet.primary),
                         onSaved: (newValue) {
                           setState(() {
                             _enteredpassword = newValue!;
@@ -215,8 +260,15 @@ class _AuthScreen extends State<AuthScreen> {
                           }
                           return null;
                         },
+                        autofocus: false,
                         obscureText: true,
                         decoration: InputDecoration(
+                          labelStyle: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.6),
+                          ),
                           border: InputBorder.none,
                           prefixIcon: Icon(
                             Icons.password,
@@ -224,7 +276,10 @@ class _AuthScreen extends State<AuthScreen> {
                           ),
                           label: Text("Enter Password"),
                           filled: true,
-                          fillColor: Color.fromARGB(255, 228, 228, 228),
+                          fillColor: Theme.of(context)
+                              .colorScheme
+                              .background
+                              .withOpacity(0),
                         ),
                       ),
                     ),

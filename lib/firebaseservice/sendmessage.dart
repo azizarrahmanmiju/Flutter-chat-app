@@ -12,7 +12,9 @@ void sendMessage(String recid,
     'recipientId': recid,
     'message': message ?? '',
     'timestamp': FieldValue.serverTimestamp(),
-    'status': 'sent'
+    'status': 'sent',
+    'image': fileUrl,
+    'fileType': fileType ?? '',
   };
 
   await db.collection('Messages').add(messagesData);
