@@ -1,5 +1,3 @@
-import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
-import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/riverpod/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +9,6 @@ import 'package:chat_app/Themes/themes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'firebaseservice/firebase_options.dart';
 
 final db = FirebaseFirestore.instance;

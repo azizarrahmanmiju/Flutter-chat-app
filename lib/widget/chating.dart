@@ -81,99 +81,110 @@ class _ChatingState extends ConsumerState<Chating> {
                               onTap: () {
                                 setState(() {
                                   messageidnoti.ontoggle(message.id);
-                                  print(message.id);
                                 });
                               },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 7,
-                                ),
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background
-                                            .withOpacity(0.2),
-                                        blurRadius: 5,
-                                        offset: const Offset(2, 2),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: isMe
-                                        ? const Color.fromARGB(
-                                            255, 211, 211, 211)
-                                        : const Color.fromARGB(
-                                            255, 48, 47, 47)),
-                                child: Column(
-                                  crossAxisAlignment: isMe
-                                      ? CrossAxisAlignment.end
-                                      : CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      message['message'],
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: isMe
-                                            ? Colors.black
-                                            : const Color.fromARGB(
-                                                255, 255, 255, 255),
+                              child: message['fileType'] == 'image'
+                                  ? Container(
+                                      height: 150,
+                                      width: 150,
+                                      child: Image.network(
+                                        message['image'],
+                                      ),
+                                    )
+                                  : Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 7,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background
+                                                  .withOpacity(0.2),
+                                              blurRadius: 5,
+                                              offset: const Offset(2, 2),
+                                            )
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          color: isMe
+                                              ? const Color.fromARGB(
+                                                  255, 211, 211, 211)
+                                              : const Color.fromARGB(
+                                                  255, 48, 47, 47)),
+                                      child: Column(
+                                        crossAxisAlignment: isMe
+                                            ? CrossAxisAlignment.end
+                                            : CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            message['message'],
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: isMe
+                                                  ? Colors.black
+                                                  : const Color.fromARGB(
+                                                      255, 255, 255, 255),
+                                            ),
+                                          ),
+                                          messageidnotiget == message.id
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    mainAxisAlignment: isMe
+                                                        ? MainAxisAlignment.end
+                                                        : MainAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        timestamp != null
+                                                            ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
+                                                            : '',
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: isMe
+                                                                ? Colors.black
+                                                                : Colors.white),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      isMe
+                                                          ? message['status'] ==
+                                                                  'seen'
+                                                              ? SizedBox(
+                                                                  height: 14,
+                                                                  width: 14,
+                                                                  child:
+                                                                      CircleAvatar(
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                            widget.imageurl),
+                                                                  ),
+                                                                )
+                                                              : Image.asset(
+                                                                  height: 14,
+                                                                  width: 14,
+                                                                  message['status'] ==
+                                                                          'sent'
+                                                                      ? 'lib/icons/tick.png'
+                                                                      : 'lib/icons/tick.png')
+                                                          : const SizedBox(
+                                                              height: 0,
+                                                            ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  height: 0,
+                                                ),
+                                        ],
                                       ),
                                     ),
-                                    messageidnotiget == message.id
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: isMe
-                                                  ? MainAxisAlignment.end
-                                                  : MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  timestamp != null
-                                                      ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
-                                                      : '',
-                                                  style: TextStyle(
-                                                      fontSize: 10,
-                                                      color: isMe
-                                                          ? Colors.black
-                                                          : Colors.white),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                isMe
-                                                    ? message['status'] ==
-                                                            'seen'
-                                                        ? SizedBox(
-                                                            height: 14,
-                                                            width: 14,
-                                                            child: CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      widget
-                                                                          .imageurl),
-                                                            ),
-                                                          )
-                                                        : Image.asset(
-                                                            height: 14,
-                                                            width: 14,
-                                                            message['status'] ==
-                                                                    'sent'
-                                                                ? 'lib/icons/tick.png'
-                                                                : 'lib/icons/tick.png')
-                                                    : const SizedBox(
-                                                        height: 0,
-                                                      ),
-                                              ],
-                                            ),
-                                          )
-                                        : const SizedBox(
-                                            height: 0,
-                                          ),
-                                  ],
-                                ),
-                              ),
                             ),
                             const SizedBox(
                               height: 4,
