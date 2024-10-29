@@ -29,7 +29,7 @@ class _Userlist extends State<UserlistScreen> {
       key: _scaffoldkey,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
-        leading: Container(),
+        // leading: Container(),
         title: StreamBuilder(
           stream: fetchcurrentuserdata(),
           builder: (context, snapshot) {

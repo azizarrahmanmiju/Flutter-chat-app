@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chat_app/firebaseservice/fileupload.dart';
 import 'package:chat_app/firebaseservice/sendmessage.dart';
 import 'package:chat_app/widget/chating.dart';
+import 'package:chat_app/widget/drawercontent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      drawer: Drawercontent(),
       appBar: AppBar(
         title: Hero(
           tag: "hello",

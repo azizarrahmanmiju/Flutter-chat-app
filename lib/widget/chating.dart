@@ -109,7 +109,7 @@ class _ChatingState extends ConsumerState<Chating> {
                                         borderRadius: BorderRadius.circular(12),
                                         color: isMe
                                             ? const Color.fromARGB(
-                                                255, 211, 211, 211)
+                                                255, 245, 245, 245)
                                             : const Color.fromARGB(
                                                 255, 48, 47, 47)),
                                     child: Column(
