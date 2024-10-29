@@ -1,4 +1,5 @@
 import 'package:chat_app/riverpod/theme.dart';
+import 'package:chat_app/shared_preference/store_modedata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +22,27 @@ void main() async {
   runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    loadTheme();
+  }
+
+  Future<void> loadTheme() async {
+    bool? savedTheme = await getthem();
+    setState(() {
+      ref.watch(themeNotifierProvider.notifier).toggleTheme(savedTheme);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = ref.watch(themeNotifierProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,

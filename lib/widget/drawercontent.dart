@@ -2,6 +2,7 @@ import 'package:chat_app/Screen/Userlist.dart';
 import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
 import 'package:chat_app/riverpod/theme.dart';
+import 'package:chat_app/shared_preference/store_modedata.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +18,24 @@ class Drawercontent extends ConsumerStatefulWidget {
 }
 
 class _DrawercontentState extends ConsumerState<Drawercontent> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //}
+  bool isLightMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadTheme();
+  }
+
+  Future<void> loadTheme() async {
+    bool? savedTheme = await getthem();
+    setState(() {
+      isLightMode = savedTheme;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final themetogleresponse = ref.read(themeNotifierProvider.notifier);
-    bool islightmode = ref.watch(themeNotifierProvider);
+    final themetogleresponse = ref.watch(themeNotifierProvider.notifier);
 
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -87,17 +97,20 @@ class _DrawercontentState extends ConsumerState<Drawercontent> {
                     ),
                   ),
                   trailing: CupertinoSwitch(
-                      value: islightmode,
+                      value: isLightMode,
                       onChanged: (value) {
                         setState(() {
-                          themetogleresponse.toggleTheme(value);
+                          isLightMode = value;
+                          settheme(isLightMode);
+                          print(isLightMode);
+                          themetogleresponse.toggleTheme(isLightMode);
                         });
                       }),
                 ),
 
                 currentUser != null
                     ? ElevatedButton.icon(
-                        label: Text("Log out"),
+                        label: const Text("Log out"),
                         icon: Icon(Icons.logout),
                         onPressed: () {
                           showDialog(

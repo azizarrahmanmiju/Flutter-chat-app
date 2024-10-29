@@ -29,7 +29,9 @@ class Singlelist extends StatelessWidget {
             border: Border.all(
               color: Theme.of(context).colorScheme.onBackground,
             ),
-            borderRadius: const BorderRadius.all(Radius.circular(50)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(50),
+            ),
             boxShadow: [
               BoxShadow(
                 color: Theme.of(context).colorScheme.onSurface,

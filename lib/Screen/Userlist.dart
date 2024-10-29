@@ -28,6 +28,7 @@ class _Userlist extends State<UserlistScreen> {
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         leading: Container(),
         title: StreamBuilder(
           stream: fetchcurrentuserdata(),
@@ -50,34 +51,37 @@ class _Userlist extends State<UserlistScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.only(left: 20, top: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome to',
-                  style: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.8),
+            padding: const EdgeInsets.only(left: 20, top: 40, right: 15),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Welcome to',
+                    style: TextStyle(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.8),
+                    ),
                   ),
-                ),
-                Text(
-                  "Talkflow",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onBackground),
-                ),
-                const SizedBox(height: 25),
-                Text(
-                  "recent  conversations",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).colorScheme.onBackground),
-                ),
-              ],
+                  Text(
+                    "Talkflow".toUpperCase(),
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                        color: Theme.of(context).colorScheme.onBackground),
+                  ),
+                  const SizedBox(height: 25),
+                  Text(
+                    "recent  conversations",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -118,7 +122,8 @@ class _Userlist extends State<UserlistScreen> {
                           );
                         }
 
-                        String lastMessage = '';
+                        String lastMessage = 'click to quick  reply';
+
                         String status = 'sent';
 
                         if (messageSnapshot.hasData &&
