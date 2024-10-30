@@ -121,7 +121,7 @@ class _ChatingState extends ConsumerState<Chating> {
                                             color: isMe
                                                 ? Colors.black
                                                 : const Color.fromARGB(
-                                                    255, 51, 37, 37),
+                                                    255, 250, 250, 250),
                                           ),
                                         ),
                                   Padding(
@@ -145,7 +145,8 @@ class _ChatingState extends ConsumerState<Chating> {
                                               color: isMe
                                                   ? const Color.fromARGB(
                                                       186, 0, 0, 0)
-                                                  : Colors.white),
+                                                  : const Color.fromARGB(
+                                                      255, 201, 200, 200)),
                                         ),
                                         const SizedBox(width: 8),
                                         isMe

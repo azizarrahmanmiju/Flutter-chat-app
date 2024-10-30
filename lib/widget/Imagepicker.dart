@@ -34,7 +34,10 @@ class _PickImage extends State<PickImage> {
   Widget build(BuildContext context) {
     Widget content = Center(
       child: IconButton(
-        icon: const Icon(Icons.image),
+        icon: const Icon(
+          Icons.image,
+          color: Colors.white,
+        ),
         onPressed: () {
           loadimage();
         },
@@ -62,11 +65,11 @@ class _PickImage extends State<PickImage> {
         height: 100,
         width: 100,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 223, 223, 223),
+          color: const Color.fromARGB(117, 100, 98, 98),
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
             width: 2,
-            color: const Color.fromARGB(255, 209, 209, 209),
+            color: const Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         child: Padding(
