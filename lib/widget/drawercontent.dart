@@ -55,11 +55,11 @@ class _DrawercontentState extends ConsumerState<Drawercontent> {
                   image: '',
                   theme: 'light');
           return Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(5),
             child: ListView(
               children: [
                 Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(2),
                   height: 100,
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -96,6 +96,7 @@ class _DrawercontentState extends ConsumerState<Drawercontent> {
                       fontSize: 16,
                     ),
                   ),
+                  subtitle: const Text('dark recommended'),
                   trailing: CupertinoSwitch(
                       value: isLightMode,
                       onChanged: (value) {

@@ -69,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
               width: double.infinity,
               fit: BoxFit.cover),
           Container(
-            color: Theme.of(context).colorScheme.background.withOpacity(0.93),
+            color: Theme.of(context).colorScheme.surface.withOpacity(0.93),
             height: double.infinity,
             width: double.infinity,
           ),
@@ -83,14 +83,14 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 20,
+                  left: 5,
                   bottom: 30,
                   top: 10,
                 ),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.add),
                       onPressed: () {
                         pickImage(); // Call the function to pick image
                       },
@@ -99,16 +99,16 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: Container(
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                blurRadius: 2,
-                                blurStyle: BlurStyle.normal,
-                                spreadRadius: 0,
-                                offset: Offset(0, 0))
-                          ],
-                          color: Theme.of(context).colorScheme.background,
+                          border: Border.all(
+                              width: 1,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.6)),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surface
+                              .withOpacity(0.8),
                           borderRadius: const BorderRadius.all(
                             Radius.circular(15),
                           ),

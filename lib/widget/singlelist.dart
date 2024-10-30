@@ -5,6 +5,7 @@ class Singlelist extends StatelessWidget {
   final String name;
   final String lastmessage;
   final String laststatus;
+  final type;
 
   const Singlelist({
     super.key,
@@ -12,6 +13,7 @@ class Singlelist extends StatelessWidget {
     required this.name,
     required this.lastmessage,
     required this.laststatus,
+    required this.type,
   });
 
   @override
@@ -25,9 +27,9 @@ class Singlelist extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background.withOpacity(0.3),
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
           border: Border.all(
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
           ),
           borderRadius: const BorderRadius.all(
             Radius.circular(50),
@@ -61,7 +63,7 @@ class Singlelist extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            lastmessage ?? "No  messages", // Last message
+                            lastmessage, // Last message
 
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

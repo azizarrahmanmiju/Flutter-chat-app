@@ -1,5 +1,4 @@
 import 'package:chat_app/Screen/chat_scree.dart';
-import 'package:chat_app/Themes/themes.dart';
 import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
 import 'package:chat_app/firebaseservice/getdata.dart';
@@ -14,6 +13,8 @@ import 'package:flutter/material.dart';
 final currentUser = FirebaseAuth.instance.currentUser;
 
 class UserlistScreen extends StatefulWidget {
+  const UserlistScreen({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _Userlist();
@@ -26,19 +27,16 @@ class _Userlist extends State<UserlistScreen> {
   @override
   Widget build(BuildContext context) {
     Userdata currentuserdat;
-
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
-        backgroundColor:
-            Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
         leading: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: StreamBuilder(
             stream: fetchcurrentuserdata(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text('...');
+                return const Text('wait...');
               }
               if (snapshot.hasData) {
                 currentuserdat = snapshot.data!;
@@ -70,14 +68,14 @@ class _Userlist extends State<UserlistScreen> {
                     Text(
                       currentuserdat.name!,
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.onBackground),
+                          color: Theme.of(context).colorScheme.onSurface),
                     ),
                     Text(
                       "welcome back to talkflow",
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
-                                .onBackground
+                                .onSurface
                                 .withOpacity(0.6),
                           ),
                     ),
@@ -97,7 +95,7 @@ class _Userlist extends State<UserlistScreen> {
               width: double.infinity,
               fit: BoxFit.cover),
           Container(
-            color: Theme.of(context).colorScheme.background.withOpacity(0.93),
+            color: Theme.of(context).colorScheme.surface.withOpacity(0.93),
             height: double.infinity,
             width: double.infinity,
           ),
@@ -125,7 +123,7 @@ class _Userlist extends State<UserlistScreen> {
                               style: TextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .onBackground
+                                    .onSurface
                                     .withOpacity(0.8),
                               ),
                             ),
@@ -134,9 +132,8 @@ class _Userlist extends State<UserlistScreen> {
                               style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.w900,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground),
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
                             ),
                             const SizedBox(height: 25),
                             // Text(
@@ -169,8 +166,6 @@ class _Userlist extends State<UserlistScreen> {
                       );
                     }
                     if (snapshot.hasError) {
-                      print('has error');
-
                       return const Center(
                         child: Center(child: Text("There was an error")),
                       );
@@ -193,15 +188,17 @@ class _Userlist extends State<UserlistScreen> {
                             }
 
                             String lastMessage = 'click to quick  reply';
-
                             String status = 'sent';
+                            String messagetype = 'text';
 
                             if (messageSnapshot.hasData &&
                                 messageSnapshot.data!.docs.isNotEmpty) {
-                              lastMessage = messageSnapshot.data!.docs.first[
-                                  'message']; // Adjust based on your field
-                              status = messageSnapshot.data!.docs.first[
-                                  'status']; // Adjust based on your field
+                              final snapshotdata =
+                                  messageSnapshot.data!.docs.first;
+
+                              lastMessage = snapshotdata['message'];
+                              status = snapshotdata['status'];
+                              messagetype = snapshotdata['fileType'];
                             }
 
                             return InkWell(
@@ -220,6 +217,7 @@ class _Userlist extends State<UserlistScreen> {
                                 name: userdata[index].name!,
                                 lastmessage: lastMessage,
                                 laststatus: status,
+                                type: messagetype,
                               ),
                             );
                           },

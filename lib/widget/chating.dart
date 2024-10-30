@@ -73,107 +73,107 @@ class _ChatingState extends ConsumerState<Chating> {
                               ? CrossAxisAlignment.end
                               : CrossAxisAlignment.start,
                           children: [
-                            message['fileType'] == 'image'
-                                ? Container(
-                                    height: 170,
-                                    width: 150,
-                                    clipBehavior: Clip.hardEdge,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: Image.network(
-                                      message['image'],
-                                      fit: BoxFit.cover,
-                                      height: 150,
-                                    ),
-                                  )
-                                : Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 7,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .background
-                                                .withOpacity(0.2),
-                                            blurRadius: 5,
-                                            offset: const Offset(2, 2),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: isMe
-                                            ? const Color.fromARGB(
-                                                255, 245, 245, 245)
-                                            : const Color.fromARGB(
-                                                255, 48, 47, 47)),
-                                    child: Column(
-                                      crossAxisAlignment: isMe
-                                          ? CrossAxisAlignment.end
-                                          : CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
+                            Container(
+                              padding: EdgeInsets.only(
+                                  left: message['fileType'] == 'image' ? 1 : 15,
+                                  bottom: 2,
+                                  right:
+                                      message['fileType'] == 'image' ? 1 : 10,
+                                  top: 1),
+                              decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 0),
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: isMe
+                                      ? const Color.fromARGB(255, 250, 250, 250)
+                                      : const Color.fromARGB(255, 48, 47, 47)),
+                              child: Column(
+                                crossAxisAlignment: isMe
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                                children: [
+                                  message['fileType'] == 'image'
+                                      ? Container(
+                                          height: 170,
+                                          width: 150,
+                                          clipBehavior: Clip.hardEdge,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Image.network(
+                                            message['image'],
+                                            fit: BoxFit.cover,
+                                            height: 150,
+                                          ),
+                                        )
+                                      : Text(
                                           message['message'],
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: isMe
                                                 ? Colors.black
                                                 : const Color.fromARGB(
-                                                    255, 255, 255, 255),
+                                                    255, 51, 37, 37),
                                           ),
                                         ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: isMe
-                                                ? MainAxisAlignment.end
-                                                : MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                timestamp != null
-                                                    ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
-                                                    : '',
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: isMe
-                                                        ? Colors.black
-                                                        : Colors.white),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              isMe
-                                                  ? message['status'] == 'seen'
-                                                      ? SizedBox(
-                                                          height: 14,
-                                                          width: 14,
-                                                          child: CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(widget
-                                                                    .imageurl),
-                                                          ),
-                                                        )
-                                                      : Image.asset(
-                                                          height: 14,
-                                                          width: 14,
-                                                          message['status'] ==
-                                                                  'sent'
-                                                              ? 'lib/icons/sent.png'
-                                                              : 'lib/icons/tick.png')
-                                                  : const SizedBox(
-                                                      height: 0,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 5,
+                                      right: 5,
+                                      bottom: 0,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: isMe
+                                          ? MainAxisAlignment.end
+                                          : MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          timestamp != null
+                                              ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
+                                              : '',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: isMe
+                                                  ? const Color.fromARGB(
+                                                      186, 0, 0, 0)
+                                                  : Colors.white),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        isMe
+                                            ? message['status'] == 'seen'
+                                                ? SizedBox(
+                                                    height: 14,
+                                                    width: 14,
+                                                    child: CircleAvatar(
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              widget.imageurl),
                                                     ),
-                                            ],
-                                          ),
-                                        )
+                                                  )
+                                                : Image.asset(
+                                                    height: 14,
+                                                    width: 14,
+                                                    message['status'] == 'sent'
+                                                        ? 'lib/icons/sent.png'
+                                                        : 'lib/icons/tick.png')
+                                            : const SizedBox(
+                                                height: 0,
+                                              ),
                                       ],
                                     ),
-                                  ),
+                                  )
+                                ],
+                              ),
+                            ),
                             const SizedBox(
                               height: 4,
                             ),
