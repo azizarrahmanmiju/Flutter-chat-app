@@ -26,26 +26,67 @@ class _Userlist extends State<UserlistScreen> {
   @override
   Widget build(BuildContext context) {
     Userdata currentuserdat;
+
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
         backgroundColor:
-            Theme.of(context).colorScheme.background.withOpacity(0.2),
-        // leading: Container(),
-        title: StreamBuilder(
-          stream: fetchcurrentuserdata(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: StreamBuilder(
+            stream: fetchcurrentuserdata(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('...');
+              }
+              if (snapshot.hasData) {
+                currentuserdat = snapshot.data!;
+                return GestureDetector(
+                  onTap: () => _scaffoldkey.currentState!.openDrawer(),
+                  child: userappbar(
+                    name: currentuserdat.name!,
+                    image: currentuserdat.image!,
+                  ),
+                );
+              }
+              return const Icon(Icons.error);
+            },
+          ),
+        ),
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+            stream: fetchcurrentuserdata(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('...');
+              }
+              if (snapshot.hasData) {
+                currentuserdat = snapshot.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      currentuserdat.name!,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.onBackground),
+                    ),
+                    Text(
+                      "welcome back to talkflow",
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.6),
+                          ),
+                    ),
+                  ],
+                );
+              }
               return const Text('...');
-            }
-            currentuserdat = snapshot.data!;
-
-            return GestureDetector(
-              onTap: () => _scaffoldkey.currentState!.openDrawer(),
-              child: userappbar(
-                  name: currentuserdat.name!, image: currentuserdat.image!),
-            );
-          },
+            },
+          ),
         ),
       ),
       drawer: const Drawercontent(),

@@ -22,28 +22,28 @@ class userappbar extends StatelessWidget {
             backgroundImage: NetworkImage(image),
           ),
         ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
-            ),
-            Text(
-              "welcome back to talkflow",
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.6),
-                  ),
-            )
-          ],
-        ),
+
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Text(
+        //       name,
+        //       style: Theme.of(context)
+        //           .textTheme
+        //           .titleMedium!
+        //           .copyWith(color: Theme.of(context).colorScheme.onBackground),
+        //     ),
+        //     Text(
+        //       "welcome back to talkflow",
+        //       style: Theme.of(context).textTheme.titleSmall!.copyWith(
+        //             color: Theme.of(context)
+        //                 .colorScheme
+        //                 .onBackground
+        //                 .withOpacity(0.6),
+        //           ),
+        //     )
+        //   ],
+        // ),
       ],
     );
   }

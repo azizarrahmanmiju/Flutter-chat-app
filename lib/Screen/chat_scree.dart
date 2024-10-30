@@ -62,83 +62,98 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: Chating(
-              recipientid: widget.recipientId,
-              imageurl: widget.recipientimage,
-            ),
+          Image.asset('lib/icons/background.jpg',
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.cover),
+          Container(
+            color: Theme.of(context).colorScheme.background.withOpacity(0.93),
+            height: double.infinity,
+            width: double.infinity,
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              bottom: 30,
-              top: 10,
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    pickImage(); // Call the function to pick image
-                  },
+          Column(
+            children: [
+              Expanded(
+                child: Chating(
+                  recipientid: widget.recipientId,
+                  imageurl: widget.recipientimage,
                 ),
-                Expanded(
-                  child: Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            blurRadius: 2,
-                            blurStyle: BlurStyle.normal,
-                            spreadRadius: 0,
-                            offset: Offset(0, 0))
-                      ],
-                      color: Theme.of(context).colorScheme.background,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(15),
-                      ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  bottom: 30,
+                  top: 10,
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        pickImage(); // Call the function to pick image
+                      },
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20,
-                        bottom: 5,
-                        top: 5,
-                      ),
-                      child: TextField(
-                        autofocus: false,
-                        maxLines: null,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground),
-                        keyboardType: TextInputType.text,
-                        controller: _messageController,
-                        textDirection: TextDirection.ltr,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
+                    Expanded(
+                      child: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                blurRadius: 2,
+                                blurStyle: BlurStyle.normal,
+                                spreadRadius: 0,
+                                offset: Offset(0, 0))
+                          ],
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(15),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            bottom: 5,
+                            top: 5,
+                          ),
+                          child: TextField(
+                            autofocus: false,
+                            maxLines: null,
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground),
+                            keyboardType: TextInputType.text,
+                            controller: _messageController,
+                            textDirection: TextDirection.ltr,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        if (_messageController.text.isNotEmpty) {
+                          sendMessage(
+                            widget.recipientId,
+                            message: _messageController.text,
+                          );
+                          _messageController.clear();
+                        }
+                      },
+                      icon: const Icon(Icons.send),
+                    )
+                  ],
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                IconButton(
-                  onPressed: () {
-                    if (_messageController.text.isNotEmpty) {
-                      sendMessage(
-                        widget.recipientId,
-                        message: _messageController.text,
-                      );
-                      _messageController.clear();
-                    }
-                  },
-                  icon: const Icon(Icons.send),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
