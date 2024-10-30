@@ -35,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      drawer: Drawercontent(),
+      drawer: const Drawercontent(),
       appBar: AppBar(
         title: Hero(
           tag: "hello",
@@ -89,12 +89,25 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        pickImage(); // Call the function to pick image
-                      },
-                    ),
+                    PopupMenuButton(
+                        popUpAnimationStyle: AnimationStyle(
+                            duration: const Duration(
+                          milliseconds: 400,
+                        )),
+                        clipBehavior: Clip.hardEdge,
+                        icon: const Icon(Icons.add_circle_outline_outlined),
+                        itemBuilder: (context) => [
+                              PopupMenuItem(
+                                child: const Row(children: [
+                                  Icon(Icons.image),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(' Image'),
+                                ]),
+                                onTap: pickImage,
+                              ),
+                            ]),
                     Expanded(
                       child: Container(
                         clipBehavior: Clip.hardEdge,
@@ -123,8 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             autofocus: false,
                             maxLines: null,
                             style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground),
+                                color: Theme.of(context).colorScheme.onSurface),
                             keyboardType: TextInputType.text,
                             controller: _messageController,
                             textDirection: TextDirection.ltr,
