@@ -25,21 +25,14 @@ class Singlelist extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onBackground,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(50),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.onSurface,
-                blurRadius: 2,
-                spreadRadius: 0,
-                offset: const Offset(0, 0),
-              )
-            ]),
+          color: Theme.of(context).colorScheme.background.withOpacity(0.3),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(50),
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(

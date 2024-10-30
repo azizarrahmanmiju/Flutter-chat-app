@@ -1,4 +1,5 @@
 import 'package:chat_app/Screen/chat_scree.dart';
+import 'package:chat_app/Themes/themes.dart';
 import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
 import 'package:chat_app/firebaseservice/getdata.dart';
@@ -28,7 +29,8 @@ class _Userlist extends State<UserlistScreen> {
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor:
+            Theme.of(context).colorScheme.background.withOpacity(0.2),
         // leading: Container(),
         title: StreamBuilder(
           stream: fetchcurrentuserdata(),
@@ -47,117 +49,146 @@ class _Userlist extends State<UserlistScreen> {
         ),
       ),
       drawer: const Drawercontent(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
+          Image.asset('lib/icons/background.jpg',
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.cover),
           Container(
-            padding: const EdgeInsets.only(left: 20, top: 40, right: 15),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Welcome to',
-                    style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.8),
-                    ),
-                  ),
-                  Text(
-                    "Talkflow".toUpperCase(),
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.onBackground),
-                  ),
-                  const SizedBox(height: 25),
-                  Text(
-                    "recent  conversations",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).colorScheme.onBackground),
-                  ),
-                ],
-              ),
-            ),
+            color: Theme.of(context).colorScheme.background.withOpacity(0.93),
+            height: double.infinity,
+            width: double.infinity,
           ),
-          Expanded(
-            child: StreamBuilder(
-              stream: GetDataService.getdataStream(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Center(child: Text("No data available")),
-                  );
-                }
-                if (snapshot.hasError) {
-                  print('has error');
-
-                  return const Center(
-                    child: Center(child: Text("There was an error")),
-                  );
-                }
-
-                var userdata = snapshot.data;
-
-                return ListView.builder(
-                  itemCount: userdata!.length,
-                  itemBuilder: (context, index) {
-                    return StreamBuilder(
-                      stream: getLastMessageStream(userdata[index].id!),
-                      builder: (context,
-                          AsyncSnapshot<QuerySnapshot> messageSnapshot) {
-                        if (messageSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        String lastMessage = 'click to quick  reply';
-
-                        String status = 'sent';
-
-                        if (messageSnapshot.hasData &&
-                            messageSnapshot.data!.docs.isNotEmpty) {
-                          lastMessage = messageSnapshot.data!.docs
-                              .first['message']; // Adjust based on your field
-                          status = messageSnapshot.data!.docs
-                              .first['status']; // Adjust based on your field
-                        }
-
-                        return InkWell(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChatScreen(
-                                recipientId: userdata[index].id!,
-                                recipientName: userdata[index].name!,
-                                recipientimage: userdata[index].image!,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(left: 20, top: 15, right: 15),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Image.asset(
+                      //   'lib/icons/chatbuble.png',
+                      //   height: 100,
+                      //   width: 100,
+                      // ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Welcome to',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(0.8),
                               ),
                             ),
-                          ),
-                          child: Singlelist(
-                            image: userdata[index].image!,
-                            name: userdata[index].name!,
-                            lastmessage: lastMessage,
-                            laststatus: status,
-                          ),
+                            Text(
+                              "Talkflow".toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w900,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground),
+                            ),
+                            const SizedBox(height: 25),
+                            // Text(
+                            //   "recent  conversations",
+                            //   style: TextStyle(
+                            //       fontSize: 12,
+                            //       color: Theme.of(context)
+                            //           .colorScheme
+                            //           .onBackground),
+                            // ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: StreamBuilder(
+                  stream: GetDataService.getdataStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: Center(child: Text("No data available")),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      print('has error');
+
+                      return const Center(
+                        child: Center(child: Text("There was an error")),
+                      );
+                    }
+
+                    var userdata = snapshot.data;
+
+                    return ListView.builder(
+                      itemCount: userdata!.length,
+                      itemBuilder: (context, index) {
+                        return StreamBuilder(
+                          stream: getLastMessageStream(userdata[index].id!),
+                          builder: (context,
+                              AsyncSnapshot<QuerySnapshot> messageSnapshot) {
+                            if (messageSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            String lastMessage = 'click to quick  reply';
+
+                            String status = 'sent';
+
+                            if (messageSnapshot.hasData &&
+                                messageSnapshot.data!.docs.isNotEmpty) {
+                              lastMessage = messageSnapshot.data!.docs.first[
+                                  'message']; // Adjust based on your field
+                              status = messageSnapshot.data!.docs.first[
+                                  'status']; // Adjust based on your field
+                            }
+
+                            return InkWell(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                    recipientId: userdata[index].id!,
+                                    recipientName: userdata[index].name!,
+                                    recipientimage: userdata[index].image!,
+                                  ),
+                                ),
+                              ),
+                              child: Singlelist(
+                                image: userdata[index].image!,
+                                name: userdata[index].name!,
+                                lastmessage: lastMessage,
+                                laststatus: status,
+                              ),
+                            );
+                          },
                         );
                       },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
