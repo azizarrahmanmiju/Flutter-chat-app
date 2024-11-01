@@ -8,7 +8,7 @@ class GetMessage {
     final currentUser = FirebaseAuth.instance.currentUser;
 
     // Query to get the messages between the current user and the recipient
-    return db
+    final msgresponse = db
         .collection('Messages')
         .where(
           'senderId',
@@ -23,6 +23,18 @@ class GetMessage {
         )
         .orderBy("timestamp", descending: true)
         .snapshots();
+
+    msgresponse.first.then((snapshot) {
+      for (var doc in snapshot.docs) {
+        if (doc['recipientId'] == currentUser.uid) {
+          db.collection('Messages').doc(doc.id).update({
+            'status': 'seen',
+          });
+        }
+      }
+    });
+
+    return msgresponse;
   }
 }
 
@@ -41,7 +53,7 @@ Stream<QuerySnapshot> getLastMessageStream(String recipientId) {
     for (var doc in snapshot.docs) {
       if (doc['recipientId'] == currentUser.uid) {
         db.collection('Messages').doc(doc.id).update({
-          'status': 'seen',
+          'status': 'delivered',
         });
       }
     }

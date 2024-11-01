@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:chat_app/Themes/themes.dart';
 import 'package:chat_app/widget/Imagepicker.dart';
-import 'package:chat_app/widget/authtextfield.dart';
-import 'package:chat_app/widget/drawercontent.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -52,7 +50,7 @@ class _AuthScreen extends State<AuthScreen> {
           _isauthenticating = true;
         });
         if (_islogin) {
-          final response = await _firebase.signInWithEmailAndPassword(
+          await _firebase.signInWithEmailAndPassword(
               email: _enteredemail!, password: _enteredpassword!);
         } else {
           final response = await _firebase.createUserWithEmailAndPassword(

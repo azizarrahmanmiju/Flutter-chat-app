@@ -77,8 +77,7 @@ class _ChatingState extends ConsumerState<Chating> {
                               padding: EdgeInsets.only(
                                   left: message['fileType'] == 'image' ? 1 : 15,
                                   bottom: 2,
-                                  right:
-                                      message['fileType'] == 'image' ? 1 : 10,
+                                  right: message['fileType'] == 'image' ? 1 : 5,
                                   top: 1),
                               decoration: BoxDecoration(
                                   boxShadow: const [
@@ -114,14 +113,20 @@ class _ChatingState extends ConsumerState<Chating> {
                                             height: 150,
                                           ),
                                         )
-                                      : Text(
-                                          message['message'],
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: isMe
-                                                ? Colors.black
-                                                : const Color.fromARGB(
-                                                    255, 250, 250, 250),
+                                      : Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 8,
+                                            right: 5,
+                                          ),
+                                          child: Text(
+                                            message['message'],
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: isMe
+                                                  ? Colors.black
+                                                  : const Color.fromARGB(
+                                                      255, 250, 250, 250),
+                                            ),
                                           ),
                                         ),
                                   Padding(

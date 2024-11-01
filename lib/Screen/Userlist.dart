@@ -23,10 +23,31 @@ class UserlistScreen extends StatefulWidget {
 
 class _Userlist extends State<UserlistScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
+  late Stream<User?> authStateChanges;
+
+  @override
+  void initState() {
+    authStateChanges = FirebaseAuth.instance.authStateChanges();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Userdata currentuserdat;
+    return StreamBuilder<User?>(
+      stream: authStateChanges,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          // User is not logged in, show login screen or prompt
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // User is logged in, fetch data
+        return buildUserListScreen(snapshot.data!);
+      },
+    );
+  }
+
+  Widget buildUserListScreen(User user) {
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
@@ -39,7 +60,7 @@ class _Userlist extends State<UserlistScreen> {
                 return const Text('wait...');
               }
               if (snapshot.hasData) {
-                currentuserdat = snapshot.data!;
+                final currentuserdat = snapshot.data!;
                 return GestureDetector(
                   onTap: () => _scaffoldkey.currentState!.openDrawer(),
                   child: userappbar(
@@ -61,7 +82,7 @@ class _Userlist extends State<UserlistScreen> {
                 return const Text('...');
               }
               if (snapshot.hasData) {
-                currentuserdat = snapshot.data!;
+                final currentuserdat = snapshot.data!;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

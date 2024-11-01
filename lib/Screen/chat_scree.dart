@@ -35,7 +35,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      drawer: const Drawercontent(),
       appBar: AppBar(
         title: Hero(
           tag: "hello",
@@ -98,6 +97,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         icon: const Icon(Icons.add_circle_outline_outlined),
                         itemBuilder: (context) => [
                               PopupMenuItem(
+                                onTap: pickImage,
                                 child: const Row(children: [
                                   Icon(Icons.image),
                                   SizedBox(
@@ -105,7 +105,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                   Text(' Image'),
                                 ]),
-                                onTap: pickImage,
                               ),
                             ]),
                     Expanded(
