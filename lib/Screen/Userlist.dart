@@ -111,15 +111,10 @@ class _Userlist extends State<UserlistScreen> {
       drawer: const Drawercontent(),
       body: Stack(
         children: [
-          Image.asset('lib/icons/background.jpg',
+          Image.asset('lib/icons/authback.jpg',
               height: double.infinity,
               width: double.infinity,
               fit: BoxFit.cover),
-          Container(
-            color: Theme.of(context).colorScheme.surface.withOpacity(0.93),
-            height: double.infinity,
-            width: double.infinity,
-          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -142,19 +137,15 @@ class _Userlist extends State<UserlistScreen> {
                             Text(
                               'Welcome to',
                               style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withOpacity(0.8),
+                                color: Colors.white.withOpacity(0.7),
                               ),
                             ),
                             Text(
                               "Talkflow".toUpperCase(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.w900,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface),
+                                  color: Colors.white),
                             ),
                             const SizedBox(height: 25),
                             // Text(
