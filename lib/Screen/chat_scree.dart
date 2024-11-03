@@ -174,7 +174,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
       File image = File(pickedFile.path);
       String imageUrl = await uploadFile(image, 'jpg');
@@ -185,7 +184,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> pickZipFile() async {
     final result = await FilePicker.platform
         .pickFiles(type: FileType.custom, allowedExtensions: ['zip']);
-
     if (result != null) {
       File zipFile = File(result.files.single.path!);
       String zipUrl = await uploadFile(zipFile, 'zip');
