@@ -87,7 +87,9 @@ class _ChatingState extends ConsumerState<Chating> {
                             final Offset position =
                                 box.localToGlobal(Offset.zero);
 
-                            showPopupMenu(context, position, message.id!);
+                            if (isMe)
+                              showPopupMenu(context, position, messageId,
+                                  message['fileType']);
                           },
                           child: Container(
                             child: Align(

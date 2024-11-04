@@ -14,7 +14,7 @@ void sendMessage(String recid,
     'timestamp': FieldValue.serverTimestamp(),
     'status': 'sent',
     'image': fileUrl ?? '',
-    'fileType': fileType ?? '',
+    'fileType': fileType ?? 'text',
   };
 
   await db.collection('Messages').add(messagesData);
