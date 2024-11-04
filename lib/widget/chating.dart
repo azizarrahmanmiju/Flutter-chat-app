@@ -64,166 +64,156 @@ class _ChatingState extends ConsumerState<Chating> {
                       : null;
 
                   return Padding(
-                    padding: EdgeInsets.only(
-                      left: isMe
-                          ? MediaQuery.of(context).size.width * 0.3
-                          : MediaQuery.of(context).size.width * 0.03,
-                      right: isMe
-                          ? MediaQuery.of(context).size.width * 0.03
-                          : MediaQuery.of(context).size.width * 0.3,
-                    ),
-                    child: GestureDetector(
+                      padding: EdgeInsets.only(
+                        left: isMe
+                            ? MediaQuery.of(context).size.width * 0.3
+                            : MediaQuery.of(context).size.width * 0.03,
+                        right: isMe
+                            ? MediaQuery.of(context).size.width * 0.03
+                            : MediaQuery.of(context).size.width * 0.3,
+                      ),
+                      child: GestureDetector(
+                        key: messageKeys[messageId],
                         onLongPress: () {
-                          setState(() {
-                            ispressed = !ispressed;
-                          });
-                        },
-                        child: GestureDetector(
-                          key: messageKeys[messageId],
-                          onLongPress: () {
-                            final RenderBox box = messageKeys[messageId]!
-                                .currentContext!
-                                .findRenderObject() as RenderBox;
-                            final Offset position =
-                                box.localToGlobal(Offset.zero);
+                          final RenderBox box = messageKeys[messageId]!
+                              .currentContext!
+                              .findRenderObject() as RenderBox;
+                          final Offset position =
+                              box.localToGlobal(Offset.zero);
 
-                            if (isMe)
-                              showPopupMenu(context, position, messageId,
-                                  message['fileType']);
-                          },
-                          child: Container(
-                            child: Align(
-                              alignment: isMe
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Column(
-                                crossAxisAlignment: isMe
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.only(
-                                        left: message['fileType'] == 'image'
-                                            ? 1
-                                            : 15,
-                                        bottom: 2,
-                                        right: message['fileType'] == 'image'
-                                            ? 1
-                                            : 5,
-                                        top: 1),
-                                    decoration: BoxDecoration(
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 10,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: isMe
-                                            ? const Color.fromARGB(
-                                                255, 250, 250, 250)
-                                            : const Color.fromARGB(
-                                                255, 48, 47, 47)),
-                                    child: Column(
-                                      crossAxisAlignment: isMe
-                                          ? CrossAxisAlignment.end
-                                          : CrossAxisAlignment.start,
-                                      children: [
-                                        message['fileType'] == 'image'
-                                            ? Container(
-                                                height: 170,
-                                                width: 150,
-                                                clipBehavior: Clip.hardEdge,
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                ),
-                                                child: Image.network(
-                                                  message['image'],
-                                                  fit: BoxFit.cover,
-                                                  height: 150,
-                                                ),
-                                              )
-                                            : Padding(
-                                                padding: const EdgeInsets.only(
-                                                  top: 8,
-                                                  right: 5,
-                                                ),
-                                                child: Text(
-                                                  message['message'],
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: isMe
-                                                        ? Colors.black
-                                                        : const Color.fromARGB(
-                                                            255, 250, 250, 250),
-                                                  ),
-                                                ),
-                                              ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 5,
-                                            right: 5,
-                                            bottom: 0,
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: isMe
-                                                ? MainAxisAlignment.end
-                                                : MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                timestamp != null
-                                                    ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
-                                                    : '',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: isMe
-                                                        ? const Color.fromARGB(
-                                                            186, 0, 0, 0)
-                                                        : const Color.fromARGB(
-                                                            255,
-                                                            201,
-                                                            200,
-                                                            200)),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              isMe
-                                                  ? message['status'] == 'seen'
-                                                      ? SizedBox(
-                                                          height: 14,
-                                                          width: 14,
-                                                          child: CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(widget
-                                                                    .imageurl),
-                                                          ),
-                                                        )
-                                                      : Image.asset(
-                                                          height: 14,
-                                                          width: 14,
-                                                          message['status'] ==
-                                                                  'sent'
-                                                              ? 'lib/icons/sent.png'
-                                                              : 'lib/icons/tick.png')
-                                                  : const SizedBox(height: 0),
-                                            ],
-                                          ),
+                          if (isMe) {
+                            showPopupMenu(context, position, messageId,
+                                message['fileType']);
+                          }
+                        },
+                        child: Container(
+                          child: Align(
+                            alignment: isMe
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: isMe
+                                  ? CrossAxisAlignment.end
+                                  : CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: message['fileType'] == 'image'
+                                          ? 1
+                                          : 15,
+                                      bottom: 2,
+                                      right: message['fileType'] == 'image'
+                                          ? 1
+                                          : 5,
+                                      top: 1),
+                                  decoration: BoxDecoration(
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 0),
                                         )
                                       ],
-                                    ),
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: isMe
+                                          ? const Color.fromARGB(
+                                              255, 250, 250, 250)
+                                          : const Color.fromARGB(
+                                              255, 48, 47, 47)),
+                                  child: Column(
+                                    crossAxisAlignment: isMe
+                                        ? CrossAxisAlignment.end
+                                        : CrossAxisAlignment.start,
+                                    children: [
+                                      message['fileType'] == 'image'
+                                          ? Container(
+                                              height: 170,
+                                              width: 150,
+                                              clipBehavior: Clip.hardEdge,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                              ),
+                                              child: Image.network(
+                                                message['image'],
+                                                fit: BoxFit.cover,
+                                                height: 150,
+                                              ),
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 8,
+                                                right: 5,
+                                              ),
+                                              child: Text(
+                                                message['message'],
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: isMe
+                                                      ? Colors.black
+                                                      : const Color.fromARGB(
+                                                          255, 250, 250, 250),
+                                                ),
+                                              ),
+                                            ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 5,
+                                          right: 5,
+                                          bottom: 0,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment: isMe
+                                              ? MainAxisAlignment.end
+                                              : MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              timestamp != null
+                                                  ? "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}"
+                                                  : '',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: isMe
+                                                      ? const Color.fromARGB(
+                                                          186, 0, 0, 0)
+                                                      : const Color.fromARGB(
+                                                          255, 201, 200, 200)),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            isMe
+                                                ? message['status'] == 'seen'
+                                                    ? SizedBox(
+                                                        height: 14,
+                                                        width: 14,
+                                                        child: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(widget
+                                                                  .imageurl),
+                                                        ),
+                                                      )
+                                                    : Image.asset(
+                                                        height: 14,
+                                                        width: 14,
+                                                        message['status'] ==
+                                                                'sent'
+                                                            ? 'lib/icons/sent.png'
+                                                            : 'lib/icons/tick.png')
+                                                : const SizedBox(height: 0),
+                                          ],
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  const SizedBox(height: 4),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(height: 4),
+                              ],
                             ),
                           ),
-                        )),
-                  );
+                        ),
+                      ));
                 });
           },
         ),

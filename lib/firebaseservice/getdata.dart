@@ -9,9 +9,7 @@ class GetDataService {
   static List<Userdata> userslist = [];
 
   static Stream<List<Userdata>> getdataStream() {
-    final docref =
-        db.collection("Users").orderBy("lastMessageTime", descending: true);
-
+    final docref = db.collection("Users");
     return docref.snapshots().map((snapshot) {
       print("Data loaded");
       userslist.clear();

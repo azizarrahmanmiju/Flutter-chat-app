@@ -33,7 +33,6 @@ class GetMessage {
         }
       }
     });
-
     return msgresponse;
   }
 }

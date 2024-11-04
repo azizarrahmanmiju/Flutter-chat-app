@@ -1,8 +1,11 @@
+import 'package:chat_app/firebaseservice/Updatemessage.dart';
 import 'package:chat_app/firebaseservice/deletemessage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void showPopupMenu(context, position, messageId, type) async {
   final colorpallet = Theme.of(context).colorScheme;
+  final textcontroller = TextEditingController();
 
   final selected = await showMenu(
     color: colorpallet.surface.withOpacity(0.8),
@@ -24,8 +27,8 @@ void showPopupMenu(context, position, messageId, type) async {
           child: Row(
             children: [
               Icon(Icons.edit, color: colorpallet.onSurface),
-              SizedBox(width: 8),
-              Text('Edit'),
+              const SizedBox(width: 8),
+              const Text('Edit'),
             ],
           ),
         ),
@@ -34,8 +37,8 @@ void showPopupMenu(context, position, messageId, type) async {
         child: Row(
           children: [
             Icon(Icons.delete, color: colorpallet.onSurface),
-            SizedBox(width: 8),
-            Text('Delete'),
+            const SizedBox(width: 8),
+            const Text('Delete'),
           ],
         ),
       ),
@@ -45,7 +48,7 @@ void showPopupMenu(context, position, messageId, type) async {
 
   if (selected == 'delete') {
     deletmessage(messageId);
-    ScaffoldMessenger.of(context).clearSnackBars();
+    // ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Message deleted form ${messageId}'),
@@ -53,24 +56,44 @@ void showPopupMenu(context, position, messageId, type) async {
     );
   } else if (selected == 'Edit') {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text(
-                'Edit Message',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    decoration:
-                        const InputDecoration(hintText: "Enter a new meassage"),
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground),
-                  )
-                ],
-              ),
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Edit Message',
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: textcontroller,
+              onChanged: (value) {
+                var text = value;
+              },
+              decoration: const InputDecoration(label: Text("new message")),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            )
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("cencel"),
+          ),
+          TextButton(
+            onPressed: () {
+              Updatemessage(
+                messageId,
+                textcontroller.text,
+              );
+              Navigator.pop(context);
+            },
+            child: const Text("chenge"),
+          )
+        ],
+      ),
+    );
   }
 }

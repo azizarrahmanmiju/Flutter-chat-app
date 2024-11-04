@@ -51,6 +51,7 @@ class _Userlist extends State<UserlistScreen> {
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         leading: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: StreamBuilder(
@@ -88,16 +89,15 @@ class _Userlist extends State<UserlistScreen> {
                   children: [
                     Text(
                       currentuserdat.name!,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(color: Colors.white),
                     ),
                     Text(
                       "welcome back to talkflow",
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.6),
+                            color: Colors.white.withOpacity(0.6),
                           ),
                     ),
                   ],
