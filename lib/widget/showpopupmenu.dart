@@ -1,7 +1,6 @@
 import 'package:chat_app/firebaseservice/Updatemessage.dart';
 import 'package:chat_app/firebaseservice/deletemessage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 void showPopupMenu(context, position, messageId, type) async {
   final colorpallet = Theme.of(context).colorScheme;
@@ -51,7 +50,7 @@ void showPopupMenu(context, position, messageId, type) async {
     // ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Message deleted form ${messageId}'),
+        content: Text('Message deleted form $messageId'),
       ),
     );
   } else if (selected == 'Edit') {
@@ -67,9 +66,6 @@ void showPopupMenu(context, position, messageId, type) async {
           children: [
             TextField(
               controller: textcontroller,
-              onChanged: (value) {
-                var text = value;
-              },
               decoration: const InputDecoration(label: Text("new message")),
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             )

@@ -6,7 +6,8 @@ final db = FirebaseFirestore.instance;
 
 Stream<Userdata> fetchcurrentuserdata() {
   final user = FirebaseAuth.instance.currentUser;
-  return db.collection("Users").doc(user!.uid).snapshots().map((snapshot) =>
-      Userdata.fromfirestore(
-          snapshot.data() as Map<String, dynamic>, snapshot.id));
+  final respons = db.collection("Users").doc(user!.uid).snapshots();
+
+  return respons.map((data) =>
+      Userdata.fromfirestore(data.data() as Map<String, dynamic>, data.id));
 }

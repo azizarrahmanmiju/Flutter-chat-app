@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:chat_app/Screen/chat_scree.dart';
 import 'package:chat_app/model/Userdata.dart';
 import 'package:chat_app/firebaseservice/getcurrentuserdata.dart';
 import 'package:chat_app/firebaseservice/getdata.dart';
 import 'package:chat_app/firebaseservice/getmessage.dart';
+import 'package:chat_app/widget/Appstatus.dart';
 import 'package:chat_app/widget/Userappbar.dart';
 import 'package:chat_app/widget/drawercontent.dart';
 import 'package:chat_app/widget/singlelist.dart';
@@ -23,12 +26,40 @@ class UserlistScreen extends StatefulWidget {
 
 class _Userlist extends State<UserlistScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
+
   late Stream<User?> authStateChanges;
 
   @override
   void initState() {
     authStateChanges = FirebaseAuth.instance.authStateChanges();
+
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) => notUpdated());
+    WidgetsBinding.instance.addPostFrameCallback((_) => notUpdated());
+  }
+
+  void notUpdated() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor:
+                Theme.of(context).colorScheme.surface.withOpacity(0.9),
+            title: Text(
+              "Sorry!🥲",
+              style: TextStyle(
+                  fontSize: 20, color: Theme.of(context).colorScheme.onSurface),
+            ),
+            content: const Appstatus(),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("ok"))
+            ],
+          );
+        });
   }
 
   @override
@@ -70,6 +101,7 @@ class _Userlist extends State<UserlistScreen> {
                   ),
                 );
               }
+              print(snapshot);
               return const Icon(Icons.error);
             },
           ),
