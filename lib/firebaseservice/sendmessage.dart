@@ -21,9 +21,9 @@ void sendMessage(String recid,
 
   // Update lastMessageTime for both sender and recipient
   await db.collection('Users').doc(currentUser.uid).update({
-    'lastMessageTime': FieldValue.serverTimestamp(),
+    'timestamp': FieldValue.serverTimestamp(),
   });
   await db.collection('Users').doc(recid).update({
-    'lastMessageTime': FieldValue.serverTimestamp(),
+    'timestamp': FieldValue.serverTimestamp(),
   });
 }

@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:chat_app/firebaseservice/fileupload.dart';
 import 'package:chat_app/firebaseservice/sendmessage.dart';
 import 'package:chat_app/widget/chating.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 var db = FirebaseFirestore.instance;
+var gemini = Gemini.instance;
 
 class ChatScreen extends StatefulWidget {
   final String recipientId;
@@ -30,6 +32,19 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _messageController = TextEditingController();
+  final _aitexteditingcontroller = TextEditingController();
+
+  String aitext = '';
+
+  bool isGenerate = false;
+
+  var textarray = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,24 +103,38 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Row(
                   children: [
                     PopupMenuButton(
-                        popUpAnimationStyle: AnimationStyle(
-                            duration: const Duration(
-                          milliseconds: 400,
-                        )),
-                        clipBehavior: Clip.hardEdge,
-                        icon: const Icon(Icons.add_circle_outline_outlined),
-                        itemBuilder: (context) => [
-                              PopupMenuItem(
-                                onTap: pickImage,
-                                child: const Row(children: [
-                                  Icon(Icons.image),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(' Image'),
-                                ]),
-                              ),
-                            ]),
+                      popUpAnimationStyle: AnimationStyle(
+                          duration: const Duration(
+                        milliseconds: 400,
+                      )),
+                      clipBehavior: Clip.hardEdge,
+                      icon: const Icon(Icons.add_circle_outline_outlined),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () {
+                            promtgen(); // promt call
+                          },
+                          child: Row(children: [
+                            Image.asset(
+                                height: 25, width: 25, 'lib/icons/Ai.png'),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            const Text('text generate'),
+                          ]),
+                        ),
+                        PopupMenuItem(
+                          onTap: pickImage,
+                          child: const Row(children: [
+                            Icon(Icons.image),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(' Image'),
+                          ]),
+                        ),
+                      ],
+                    ),
                     Expanded(
                       child: Container(
                         clipBehavior: Clip.hardEdge,
@@ -125,24 +154,29 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            bottom: 5,
-                            top: 5,
-                          ),
-                          child: TextField(
-                            autofocus: false,
-                            maxLines: null,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface),
-                            keyboardType: TextInputType.text,
-                            controller: _messageController,
-                            textDirection: TextDirection.ltr,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
+                            padding: const EdgeInsets.only(
+                              left: 20,
+                              bottom: 5,
+                              top: 5,
                             ),
-                          ),
-                        ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              reverse: true,
+                              child: TextField(
+                                controller: _messageController,
+                                maxLines:
+                                    null, // Allows it to expand vertically
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                                keyboardType: TextInputType.multiline,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Enter your message...",
+                                ),
+                              ),
+                            )),
                       ),
                     ),
                     const SizedBox(
@@ -165,6 +199,51 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
+          if (isGenerate)
+            Positioned(
+              bottom: 120,
+              left: 50,
+              right: 50,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    height:
+                        200, // Limit the height to make it scrollable within bounds
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+
+                    child: ListView.builder(
+                      itemCount: textarray.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          textarray[
+                              index], // Display each item in the text array
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          var finalstring = '';
+                          for (String finaltext in textarray) {
+                            finalstring += finaltext;
+                          }
+                          sendMessage(widget.recipientId, message: finalstring);
+                          finalstring = '';
+                          isGenerate = false;
+                        });
+                      },
+                      child: Text("send"))
+                ],
+              ),
+            )
         ],
       ),
     );
@@ -188,5 +267,52 @@ class _ChatScreenState extends State<ChatScreen> {
       String zipUrl = await uploadFile(zipFile, 'zip');
       sendMessage(widget.recipientId, fileUrl: zipUrl, fileType: 'zip');
     }
+  }
+
+  promtgen() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Ai Prompt',
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              controller: _aitexteditingcontroller,
+            ),
+            TextButton(
+              onPressed: () {
+                if (_aitexteditingcontroller.text.isEmpty) return;
+
+                setState(() {
+                  textarray.clear();
+                  isGenerate = true;
+                });
+
+                // Start generating content and update textarray with responses
+                gemini
+                    .streamGenerateContent(_aitexteditingcontroller.text)
+                    .listen((value) {
+                  setState(() {
+                    textarray.add(value.output ?? ''); // Add output to array
+                  });
+                }, onError: (error) {
+                  print("Error generating AI text: $error");
+                  setState(() => isGenerate = false); // Stop loading on error
+                });
+
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text("Generate"),
+            ),
+            Text(aitext)
+          ],
+        ),
+      ),
+    );
   }
 }

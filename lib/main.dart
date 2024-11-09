@@ -9,12 +9,14 @@ import 'package:chat_app/Themes/themes.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebaseservice/firebase_options.dart';
 
 final db = FirebaseFirestore.instance;
 
 void main() async {
+  Gemini.init(apiKey: 'AIzaSyAULQ5NM-EtuthQz371QT7MigWsOCvO2FY');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

@@ -102,7 +102,9 @@ class _Userlist extends State<UserlistScreen> {
                 );
               }
               print(snapshot);
-              return const Icon(Icons.error);
+              return GestureDetector(
+                  onTap: () => _scaffoldkey.currentState!.openDrawer(),
+                  child: const Icon(Icons.error));
             },
           ),
         ),

@@ -150,7 +150,7 @@ class _ChatingState extends ConsumerState<Chating> {
                                               child: Text(
                                                 message['message'],
                                                 style: TextStyle(
-                                                  fontSize: 15,
+                                                  fontSize: 12,
                                                   color: isMe
                                                       ? Colors.black
                                                       : const Color.fromARGB(

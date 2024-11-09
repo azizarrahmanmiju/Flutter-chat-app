@@ -72,19 +72,17 @@ class _DrawercontentState extends ConsumerState<Drawercontent> {
                 // const SizedBox(
                 //   height: 35,
                 // ),
-                Expanded(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(currentuserdata.image!),
-                    ),
-                    title: const Text(
-                      "Profile",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      currentuserdata.name!,
-                      maxLines: 1,
-                    ),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(currentuserdata.image!),
+                  ),
+                  title: const Text(
+                    "Profile",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    currentuserdata.name!,
+                    maxLines: 1,
                   ),
                 ),
                 // const SizedBox(height: 10),
@@ -97,7 +95,7 @@ class _DrawercontentState extends ConsumerState<Drawercontent> {
                     ),
                   ),
                   subtitle: const Text('dark recommended'),
-                  trailing: CupertinoSwitch(
+                  trailing: Switch(
                       value: isLightMode,
                       onChanged: (value) {
                         setState(() {
